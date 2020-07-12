@@ -1,12 +1,21 @@
 <template>
   <div class="hello">
-    Hello from HellowWorld
+    Hello from ViewA
+    <br /><br >
+    <HelloWorld></HelloWorld>
   </div>
 </template>
 
 <script>
+
+import HelloWorld from "@/components/HelloWorld"
+
+
 export default {
-  name: 'HelloWorld',
+  name: 'ViewA',
+  components: {
+    HelloWorld
+  },
   props: {
   }
 }

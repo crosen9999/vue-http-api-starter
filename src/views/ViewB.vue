@@ -1,15 +1,21 @@
 <template>
   <div class="hello">
-    Hello from HellowWorld
+    Hello from ViewB
+    <br />
+    <br />
+    <articles></articles>
+
   </div>
 </template>
 
 <script>
-export default {
-  name: 'HelloWorld',
-  props: {
-  }
-}
+    import Articles from "@/components/Articles"
+
+    export default {
+        components: {
+            Articles
+        }
+    }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
