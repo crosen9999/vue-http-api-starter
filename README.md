@@ -1,24 +1,7 @@
 # vue-http-api-starter
 
-## Project setup
-```
-yarn install
-```
+This is a full stack proof of concept using the following technologies:
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
-
-### Compiles and minifies for production
-```
-yarn build
-```
-
-### Lints and fixes files
-```
-yarn lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+a. Vue / Vue Router
+b. Node.js / Express
+c. mariadb

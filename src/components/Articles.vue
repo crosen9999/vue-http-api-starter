@@ -3,9 +3,10 @@
     Hello from Articles
     <br />
     <div v-for="Article in Articles" :key="Article.ArticleID">
-        {{Article.ArticleName}}
+        <router-link :to="{name: 'Article', params: {'ArticleText': Article.ArticleText}}">{{Article.ArticleName}}</router-link>
     </div>
     <br />
+    <router-view></router-view>
     <button @click="x()">Show result</button>
   </div>
 </template>
@@ -14,12 +15,9 @@
 
     export default {
         name: "Articles",
-        props: {
-        },
         data() {
             return {
-                Articles: [],
-                Name: ""
+                Articles: []
                 }
         },
         mounted() {
@@ -45,9 +43,6 @@
                     }
                 })
                 .catch( err => console.log("Error retrieving data: " + err));
-            },
-            x: function() {
-                alert();
             }
         }
     }
