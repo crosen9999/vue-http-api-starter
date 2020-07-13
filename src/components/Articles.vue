@@ -3,10 +3,10 @@
     Hello from Articles
     <br />
     <div v-for="Article in Articles" :key="Article.ArticleID">
-        <router-link :to="{name: 'Article', params: {'ArticleText': Article.ArticleText}}">{{Article.ArticleName}}</router-link>
+        <router-link :to="{name: 'Article', params: {'ArticleID': Article.ArticleID}}">{{Article.ArticleName}}</router-link>
     </div>
     <br />
-    <router-view></router-view>
+    <router-view :key="$route.path"></router-view>
     <button @click="x()">Show result</button>
   </div>
 </template>

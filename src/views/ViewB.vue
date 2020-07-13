@@ -12,9 +12,12 @@
     import Articles from "@/components/Articles"
 
     export default {
-        components: {
-            Articles
-        }
+      components: {
+          Articles
+      },
+      mounted() {
+        alert("ViewB")
+      }
     }
 </script>
 

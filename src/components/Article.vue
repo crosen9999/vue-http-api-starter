@@ -3,30 +3,26 @@
     <br />
         Hello from Article
         <br />
-        {{ArticleText}}
-    <br />
+        {{ArticleID}}
   </div>
 </template>
 
 <script>
 
     export default {
-        name: "Article",
-        props: {
-            ArticleText: {
-                type: String,
-                required: true
-            }
-        },
-        data() {
-            return {
-                }
-        },
-        mounted() {
-        },
-        methods: {
-        }
+      name: "Article",
+      props: {
+          ArticleID: {
+              type: Number,
+              required: true
+          }
+      },
+      mounted() {
+      },
+      methods: {
+      }
     }
+
 
 
 </script>
