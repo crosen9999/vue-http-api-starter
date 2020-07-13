@@ -15,8 +15,8 @@
       components: {
           Articles
       },
-      mounted() {
-        alert("ViewB")
+      created() {
+        //alert("ViewB")
       }
     }
 </script>

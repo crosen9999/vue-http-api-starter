@@ -38,7 +38,7 @@ app.get('/debug', function(req, res) {
     charIndex++;
 });
 
-// Article
+// Articles
 app.get('/articles', function(req, res) {
     console.log("***********************************************");
     console.log("Getting articles");
@@ -60,3 +60,25 @@ app.get('/articles', function(req, res) {
         .catch(err => "Error from getAllArticles: " + err)
 
 });
+
+//Article
+app.get('/article', function(req, res) {
+    console.log("***********************************************");
+    searchTerm = req.query.articleid;
+    console.log("Searching for: " + searchTerm);
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+    db.getArticle(searchTerm)
+        .then(rows => {
+            console.log("Processing result");
+            if (rows.length == 0) {
+                console.log("No data");
+                res.end('{"result": "no data"}');
+            }
+            else {
+                console.log("Data found for " + rows[0].ArticleID);
+                console.log(JSON.stringify(rows));
+                res.end(JSON.stringify(rows));
+            }
+        })
+        .catch(err => "Error from getAccount: " + err)
+    });

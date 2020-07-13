@@ -8,8 +8,8 @@
       View B
     </router-link>
 
-    <router-view :key="$route.path" />
-    
+    <router-view />
+
   </div>
 </template>
 

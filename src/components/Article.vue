@@ -3,7 +3,8 @@
     <br />
         Hello from Article
         <br />
-        {{ArticleID}}
+        {{ArticleID}}<br />
+        {{Article.ArticleText}}
   </div>
 </template>
 
@@ -11,16 +12,44 @@
 
     export default {
       name: "Article",
+        data() {
+            return {
+                Article: {}
+                }
+        },
       props: {
           ArticleID: {
-              type: Number,
-              required: true
+            type: Number,
+            required: true
           }
       },
       mounted() {
+        this.getArticle();
       },
       methods: {
-      }
+        getArticle: function() {
+            console.log("Getting data for: " + this.ArticleID);
+            const url = "http://localhost:8001/article?articleid=" + this.ArticleID;
+
+            fetch(url)
+            .then( (response) => {
+                console.log("Converting data to json");
+                return response.json();
+            })
+            .then( (data) => {
+                if (typeof(data[0].ArticleID)=="undefined") {
+                    console.log("No data found.");
+                    this.Article.ArticleText = "";
+                } else
+                {
+                    console.log("ArticleText found: " + data.ArticleText);
+                    this.Article = data[0];
+                }
+            })
+            .catch( err => console.log("Error retrieving data: " + err));
+        }
+
+}
     }
 
 
