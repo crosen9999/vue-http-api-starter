@@ -5,11 +5,23 @@ staticDir = "../public" // dev
 //staticDir = "../dist"  // prod
 
 //////////////////////////  Web Static Assets /////////////////////////
-var fs = require('fs')
-var appW = require("express");
-var serverW = appW();
+const fs = require('fs')
+const express = require("express");
+const httpsW = require("https");
 
-serverW.use(appW.static(staticDir))
+const appW = express();
+appW.use(express.static(staticDir));
+
+const key = fs.readFileSync(__dirname + '/server.key');
+const cert = fs.readFileSync(__dirname + '/server.cert');
+
+const options = {
+    key: key,
+    cert: cert
+};
+
+const serverW = httpsW.createServer(options, appW);
+
 
 console.log("Starting Web server on port " + webPort);
 serverW.listen(webPort)
