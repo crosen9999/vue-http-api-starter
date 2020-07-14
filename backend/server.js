@@ -7,6 +7,7 @@ staticDir = "../public" // dev
 //////////////////////////  Web Static Assets /////////////////////////
 var expressW = require("express");
 var appW = expressW();
+var fs = require('fs')
 
 appW.use(expressW.static(staticDir))
 
@@ -18,8 +19,14 @@ console.log("Server started.")
 //////////////////////////  API /////////////////////////
 const db = require("./dbManager");
 const app = require('express')();
-const http = require('http');
-const server = http.Server(app);
+const https = require('https');
+const server = https.createServer(
+	    {
+        key: fs.readFileSync('server.key'),
+        cert: fs.readFileSync('server.cert')
+        },
+           app
+    );
 
 console.log("Starting API server on port " + APIPort);
 server.listen(APIPort);

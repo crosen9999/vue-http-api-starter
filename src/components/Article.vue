@@ -29,7 +29,7 @@
       methods: {
         getArticle: function() {
             console.log("Getting data for: " + this.ArticleID);
-            const url = "http://localhost:8001/article?articleid=" + this.ArticleID;
+            const url = "https://localhost:8001/article?articleid=" + this.ArticleID;
 
             fetch(url)
             .then( (response) => {

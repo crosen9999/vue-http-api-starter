@@ -24,7 +24,7 @@
         methods: {
             getArticles: function() {
                 console.log("Getting data");
-                const url = "http://localhost:8001/articles"
+                const url = "https://localhost:8001/articles"
 
                 fetch(url)
                 .then( (response) => {
