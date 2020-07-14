@@ -30,8 +30,16 @@
         getArticle: function() {
             console.log("Getting data for: " + this.ArticleID);
             const url = "https://localhost:8001/article?articleid=" + this.ArticleID;
+            const bearer = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMSIsInVzZXJuYW1lIjoiam9obiJ9LCJpYXQiOjE1OTQ3NDQxNTJ9.KoYZcSflr3y41L2mwW7Z6O0tEKm01bpZTB6y8tuW4n4"
 
-            fetch(url)
+            fetch(
+                  url, {
+                  method: 'GET',
+                  headers: {
+                    'Authorization': bearer
+                    }
+                  }
+            )
             .then( (response) => {
                 console.log("Converting data to json");
                 return response.json();

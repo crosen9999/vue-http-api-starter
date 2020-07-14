@@ -22,7 +22,6 @@ const options = {
 
 const serverW = httpsW.createServer(options, appW);
 
-
 console.log("Starting Web server on port " + webPort);
 serverW.listen(webPort)
 console.log("Server started.")
@@ -33,6 +32,8 @@ const db = require("./dbManager");
 const app = require('express')();
 const https = require('https');
 const jwt = require('jsonwebtoken');
+const cors = require('cors')        //solves cross-origin issue not solved by setting CORS header normally 
+app.options('*', cors())
 
 const server = https.createServer(
 	    {
@@ -72,10 +73,10 @@ app.post('/api/login', (req, res) => {
 app.get('/articles', checkForToken, function(req, res) {
     console.log("***********************************************");
     console.log("Getting articles");
-    //jwt.verify(req.token, 'thisisthekey', (err, authData) => {
-    //    if(err) {
-     //       res.sendStatus(403);
-      //  } else {
+    jwt.verify(req.token, 'thisisthekey', (err, authData) => {
+        if(err) {
+           res.sendStatus(403);
+      } else {
             res.setHeader('Access-Control-Allow-Origin', '*');    
             res.writeHead(200, {'ContentType': 'text/html'});
             db.getAllArticles()
@@ -92,16 +93,17 @@ app.get('/articles', checkForToken, function(req, res) {
                     }
                 })
                 .catch(err => "Error from getAllArticles: " + err)            
-   //     }
-  //  })    
+        }
+    })    
 });
 
 //Article
+app.options('*', cors())
 app.get('/article', checkForToken, function(req, res) {
     console.log("***********************************************");
     searchTerm = req.query.articleid;
     console.log("Searching for: " + searchTerm);
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
+    res.setHeader('Access-Control-Allow-Origin', '*');
     db.getArticle(searchTerm)
         .then(rows => {
             console.log("Processing result");
@@ -120,13 +122,16 @@ app.get('/article', checkForToken, function(req, res) {
 
 //move this to helper functions
 function checkForToken(req, res, next) {
+    console.log("***************************************")
     console.log("Verifying token");
     const bearerHeader = req.headers['authorization'];
     if (typeof(bearerHeader) !== 'undefined'){
         const bearerToken = bearerHeader.split(' ')[1];
+        console.log("Token found: " + bearerToken);
         req.token = bearerToken;
         next();
     } else{
+        console.log("No token found.  Ending request with 403")
         res.sendStatus(403);
     }
 }

@@ -24,9 +24,18 @@
         methods: {
             getArticles: function() {
                 console.log("Getting data");
-                const url = "https://localhost:8001/articles"
+                const url = "https://localhost:8001/articles";
 
-                fetch(url)
+                const bearer = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMSIsInVzZXJuYW1lIjoiam9obiJ9LCJpYXQiOjE1OTQ3NDQxNTJ9.KoYZcSflr3y41L2mwW7Z6O0tEKm01bpZTB6y8tuW4n4"
+
+                fetch(
+                      url, {
+                      method: 'GET',
+                      headers: {
+                        'Authorization': bearer
+                        }
+                      }
+                )
                 .then( (response) => {
                     console.log("Converting data to json");
                     return response.json();
