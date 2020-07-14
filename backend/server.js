@@ -32,6 +32,8 @@ console.log("Server started.")
 const db = require("./dbManager");
 const app = require('express')();
 const https = require('https');
+const jwt = require('jsonwebtoken');
+
 const server = https.createServer(
 	    {
         key: fs.readFileSync('server.key'),
@@ -57,31 +59,45 @@ app.get('/debug', function(req, res) {
     charIndex++;
 });
 
+//Login
+app.post('/api/login', (req, res) => {
+        const user = {id: '1', username: 'john'};
+        jwt.sign({user: user}, 'thisisthekey', (err, token) => {
+            res.json({token});
+        });
+    }
+)
+
 // Articles
-app.get('/articles', function(req, res) {
+app.get('/articles', checkForToken, function(req, res) {
     console.log("***********************************************");
     console.log("Getting articles");
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');    
-    res.writeHead(200, {'ContentType': 'text/html'});
-    db.getAllArticles()
-        .then(rows => {
-            console.log("Processing result");
-            if (rows.length == 0) {
-                console.log("No data");
-                res.end('{"result": "no data"}');
-            }
-            else {
-                console.log("Data found for article " + rows[0].ArticleID);
-                console.log(JSON.stringify(rows));
-                res.end(JSON.stringify(rows));
-            }
-        })
-        .catch(err => "Error from getAllArticles: " + err)
-
+    //jwt.verify(req.token, 'thisisthekey', (err, authData) => {
+    //    if(err) {
+     //       res.sendStatus(403);
+      //  } else {
+            res.setHeader('Access-Control-Allow-Origin', '*');    
+            res.writeHead(200, {'ContentType': 'text/html'});
+            db.getAllArticles()
+                .then(rows => {
+                    console.log("Processing result");
+                    if (rows.length == 0) {
+                        console.log("No data");
+                        res.end('{"result": "no data"}');
+                    }
+                    else {
+                        console.log("Data found for article " + rows[0].ArticleID);
+                        console.log(JSON.stringify(rows));
+                        res.end(JSON.stringify(rows));
+                    }
+                })
+                .catch(err => "Error from getAllArticles: " + err)            
+   //     }
+  //  })    
 });
 
 //Article
-app.get('/article', function(req, res) {
+app.get('/article', checkForToken, function(req, res) {
     console.log("***********************************************");
     searchTerm = req.query.articleid;
     console.log("Searching for: " + searchTerm);
@@ -101,3 +117,16 @@ app.get('/article', function(req, res) {
         })
         .catch(err => "Error from getAccount: " + err)
     });
+
+//move this to helper functions
+function checkForToken(req, res, next) {
+    console.log("Verifying token");
+    const bearerHeader = req.headers['authorization'];
+    if (typeof(bearerHeader) !== 'undefined'){
+        const bearerToken = bearerHeader.split(' ')[1];
+        req.token = bearerToken;
+        next();
+    } else{
+        res.sendStatus(403);
+    }
+}
