@@ -1,8 +1,9 @@
 ///// configuration /////
-webPort = 8000
-APIPort = 8001
-staticDir = "../public" // dev
-//staticDir = "../dist"  // prod
+const WEB_PORT = 8000
+const API_PORT = 8001
+const STATIC_DIR = "../public" // dev
+//cont STATIC_DIR = "../dist"  // prod
+const JWT_SECRET = "thisisthekey"
 
 //////////////////////////  Web Static Assets /////////////////////////
 const fs = require('fs')
@@ -10,7 +11,7 @@ const express = require("express");
 const httpsW = require("https");
 
 const appW = express();
-appW.use(express.static(staticDir));
+appW.use(express.static(STATIC_DIR));
 
 const key = fs.readFileSync(__dirname + '/server.key');
 const cert = fs.readFileSync(__dirname + '/server.cert');
@@ -22,8 +23,8 @@ const options = {
 
 const serverW = httpsW.createServer(options, appW);
 
-console.log("Starting Web server on port " + webPort);
-serverW.listen(webPort)
+console.log("Starting Web server on port " + WEB_PORT);
+serverW.listen(WEB_PORT)
 console.log("Server started.")
 
 
@@ -43,8 +44,8 @@ const server = https.createServer(
         app
     );
 
-console.log("Starting API server on port " + APIPort);
-server.listen(APIPort);
+console.log("Starting API server on port " + API_PORT);
+server.listen(API_PORT);
 console.log("Server started.")
 
 // DEBUG End Point
@@ -63,7 +64,7 @@ app.get('/debug', function(req, res) {
 //Login
 app.post('/api/login', (req, res) => {
         const user = {id: '1', username: 'john'};
-        jwt.sign({user: user}, 'thisisthekey', (err, token) => {
+        jwt.sign({user: user}, JWT_SECRET, (err, token) => {
             res.json({token});
         });
     }
@@ -73,7 +74,7 @@ app.post('/api/login', (req, res) => {
 app.get('/articles', checkForToken, function(req, res) {
     console.log("***********************************************");
     console.log("Getting articles");
-    jwt.verify(req.token, 'thisisthekey', (err, authData) => {
+    jwt.verify(req.token, JWT_SECRET, (err, authData) => {
         if(err) {
            res.sendStatus(403);
       } else {
@@ -104,22 +105,28 @@ app.get('/article', checkForToken, function(req, res) {
     searchTerm = req.query.articleid;
     console.log("Searching for: " + searchTerm);
     res.setHeader('Access-Control-Allow-Origin', '*');
-    db.getArticle(searchTerm)
-        .then(rows => {
-            console.log("Processing result");
-            if (rows.length == 0) {
-                console.log("No data");
-                res.end('{"result": "no data"}');
-            }
-            else {
-                console.log("Data found for " + rows[0].ArticleID);
-                console.log(JSON.stringify(rows));
-                res.end(JSON.stringify(rows));
-            }
-        })
-        .catch(err => "Error from getAccount: " + err)
-    });
-
+    jwt.verify(req.token, JWT_SECRET, (err, authData) => {
+        if(err) {
+           res.sendStatus(403);
+        } else {
+            db.getArticle(searchTerm)
+                .then(rows => {
+                    console.log("Processing result");
+                    if (rows.length == 0) {
+                        console.log("No data");
+                        res.end('{"result": "no data"}');
+                    }
+                    else {
+                        console.log("Data found for " + rows[0].ArticleID);
+                        console.log(JSON.stringify(rows));
+                        res.end(JSON.stringify(rows));
+                    }
+                })
+                .catch(err => "Error from getAccount: " + err)
+        }
+    })
+});
+                 
 //move this to helper functions
 function checkForToken(req, res, next) {
     console.log("***************************************")

@@ -22,7 +22,7 @@ const routes = [
         name: "Article",
         props: true,
         component: () => 
-          import(/* webpackChunkName: "z" */ "../components/Article.vue")
+          import(/* webpackChunkName: "article" */ "../components/Article.vue")
       }
     ]
   }

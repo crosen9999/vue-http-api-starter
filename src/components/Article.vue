@@ -55,12 +55,9 @@
                 }
             })
             .catch( err => console.log("Error retrieving data: " + err));
+          }
         }
-
-}
-    }
-
-
+      }
 
 </script>
 
