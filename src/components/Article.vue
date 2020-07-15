@@ -31,7 +31,7 @@
       methods: {
         getArticle: function() {
             console.log("Getting data for: " + this.ArticleID);
-            const url = "https://localhost:8001/article?articleid=" + this.ArticleID;
+            const url = "https://localhost:8001/api/article?articleid=" + this.ArticleID;
             const bearer = this.$store.getters.userJWTToken;
 
             fetch(

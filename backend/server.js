@@ -73,11 +73,12 @@ app.get('/api/login', (req, res) => {
 })
 
 // Articles
-app.get('/articles', checkForToken, function(req, res) {
+app.get('/api/articles', checkForToken, function(req, res) {
     console.log("***********************************************");
     console.log("Getting articles");
     res.setHeader('Access-Control-Allow-Origin', '*');
     jwt.verify(req.token, JWT_SECRET, (err, authData) => {
+        console.log("Verified for user: " + authData.userID);
         if(err) {
             console.log("Invalid JWT");
             res.sendStatus(403);
@@ -103,7 +104,7 @@ app.get('/articles', checkForToken, function(req, res) {
 });
 
 //Article
-app.get('/article', checkForToken, function(req, res) {
+app.get('/api/article', checkForToken, function(req, res) {
     console.log("***********************************************");
     searchTerm = req.query.articleid;
     console.log("Searching for: " + searchTerm);

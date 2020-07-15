@@ -30,7 +30,7 @@
         methods: {
             getArticles: function() {
                 console.log("Getting data");
-                const url = "https://localhost:8001/articles";
+                const url = "https://localhost:8001/api/articles";
                 const bearer = this.$store.getters.userJWTToken;
                 fetch(
                       url, {
