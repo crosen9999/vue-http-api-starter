@@ -1,12 +1,18 @@
 <template>
-  <div class="hello">
-    <br />
-    <div v-for="Article in Articles" :key="Article.ArticleID">
-        <router-link :to="{name: 'Article', params: {'ArticleID': Article.ArticleID}}">{{Article.ArticleName}}</router-link>
+   
+    <div class="article-container" style="border: 1px solid grey; background-color: #555; width: 800px; height 700px">
+
+      <div class="article-list" style="width: 300px; height: 500px; float: left; border 1px solid">
+        <div v-for="Article in Articles" :key="Article.ArticleID">
+            <router-link :to="{name: 'Article', params: {'ArticleID': Article.ArticleID}}">{{Article.ArticleName}}</router-link>
+        </div>
+      </div>
+
+      <div class="article-selection" style="border: 1px red solid; float: left; width: 500px">
+        <router-view :key="$route.path"></router-view>
+``    </div>
+ 
     </div>
-    <br />
-    <router-view :key="$route.path"></router-view>
-  </div>
 </template>
 
 <script>
@@ -25,9 +31,7 @@
             getArticles: function() {
                 console.log("Getting data");
                 const url = "https://localhost:8001/articles";
-
-                const bearer = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMSIsInVzZXJuYW1lIjoiam9obiJ9LCJpYXQiOjE1OTQ3NDQxNTJ9.KoYZcSflr3y41L2mwW7Z6O0tEKm01bpZTB6y8tuW4n4"
-
+                const bearer = this.$store.getters.userJWTToken;
                 fetch(
                       url, {
                       method: 'GET',

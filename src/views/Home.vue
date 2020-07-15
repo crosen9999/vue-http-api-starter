@@ -1,9 +1,9 @@
 <template>
   <div class="hello">
-    Hello from ViewB
+    Hello from Home
     <br />
     <br />
-    <articles></articles>
+    <articles style="width: 1000px; background-color: gray"></articles>
 
   </div>
 </template>

@@ -8,6 +8,12 @@ const pool = mariadb.createPool({
     database: 'dev'
 });
 
+function validateUser(userID, password) {
+    return new Promise( (res, rej) => {
+        res({userID: "123", userName: "John"});
+    });
+}
+
 function getAllArticles() {
     return new Promise( (res, rej) => {
         pool.getConnection()
@@ -20,12 +26,14 @@ function getAllArticles() {
                         conn.release();
                 })
                 .catch(err => {
-                    console.log(err);
+                    console.log("*** Query did not execute: " + err);
                     conn.release();
+                    rej("Query did not execute");
                 })
             }).catch(err => {
                 console.log("DB Connection error");
                 conn.release();
+                rej("DB Connection error");
             });
     })
 }
@@ -42,15 +50,18 @@ function getArticle(ArticleID) {
                         conn.release();
                 })
                 .catch(err => {
-                    console.log(err);
+                    console.log("DB Query Error: " + err);
                     conn.release();
+                    rej("Query did not execute");
                 })
             }).catch(err => {
                 console.log("DB Connection error");
                 conn.release();
+                rej("DB Connection error");
             });
     })
 }
 
+module.exports.validateUser = validateUser;
 module.exports.getAllArticles = getAllArticles;
 module.exports.getArticle = getArticle;

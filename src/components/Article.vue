@@ -1,4 +1,5 @@
 <template>
+
   <div class="hello">
     <br />
         Hello from Article
@@ -6,6 +7,7 @@
         {{ArticleID}}<br />
         {{Article.ArticleText}}
   </div>
+
 </template>
 
 <script>
@@ -30,7 +32,7 @@
         getArticle: function() {
             console.log("Getting data for: " + this.ArticleID);
             const url = "https://localhost:8001/article?articleid=" + this.ArticleID;
-            const bearer = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiMSIsInVzZXJuYW1lIjoiam9obiJ9LCJpYXQiOjE1OTQ3NDQxNTJ9.KoYZcSflr3y41L2mwW7Z6O0tEKm01bpZTB6y8tuW4n4"
+            const bearer = this.$store.getters.userJWTToken;
 
             fetch(
                   url, {
@@ -50,7 +52,7 @@
                     this.Article.ArticleText = "";
                 } else
                 {
-                    console.log("ArticleText found: " + data.ArticleText);
+                    console.log("ArticleText found: " + data[0].ArticleText);
                     this.Article = data[0];
                 }
             })

@@ -12,10 +12,10 @@ const routes = [
       import(/* webpackChunkName: "x" */ "../views/ViewA.vue")
   },
   {
-    path: "/viewb",
-    name: "ViewB",
+    path: "/home",
+    name: "Home",
     component: () =>
-      import(/* webpackChunkName: "y" */ "../views/ViewB.vue"),
+      import(/* webpackChunkName: "y" */ "../views/Home.vue"),
     children: [
       {
         path: "/article/:ArticleID",

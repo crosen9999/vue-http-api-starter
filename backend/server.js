@@ -62,23 +62,26 @@ app.get('/debug', function(req, res) {
 });
 
 //Login
-app.post('/api/login', (req, res) => {
-        const user = {id: '1', username: 'john'};
-        jwt.sign({user: user}, JWT_SECRET, (err, token) => {
-            res.json({token});
-        });
-    }
-)
+app.get('/api/login', (req, res) => {
+    console.log("***********************************************");
+    console.log("Login");
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const user = {userID: '1', userName: 'john'};
+    jwt.sign(user, JWT_SECRET, (err, token) => {
+        res.json(token);
+    });
+})
 
 // Articles
 app.get('/articles', checkForToken, function(req, res) {
     console.log("***********************************************");
     console.log("Getting articles");
+    res.setHeader('Access-Control-Allow-Origin', '*');
     jwt.verify(req.token, JWT_SECRET, (err, authData) => {
         if(err) {
-           res.sendStatus(403);
+            console.log("Invalid JWT");
+            res.sendStatus(403);
       } else {
-            res.setHeader('Access-Control-Allow-Origin', '*');    
             res.writeHead(200, {'ContentType': 'text/html'});
             db.getAllArticles()
                 .then(rows => {
@@ -93,13 +96,13 @@ app.get('/articles', checkForToken, function(req, res) {
                         res.end(JSON.stringify(rows));
                     }
                 })
-                .catch(err => "Error from getAllArticles: " + err)            
+                .catch(err => "*** Error from getAllArticles: " + err)  
+                .finally(console.log("Back from getArticles()"));          
         }
     })    
 });
 
 //Article
-app.options('*', cors())
 app.get('/article', checkForToken, function(req, res) {
     console.log("***********************************************");
     searchTerm = req.query.articleid;
@@ -122,7 +125,8 @@ app.get('/article', checkForToken, function(req, res) {
                         res.end(JSON.stringify(rows));
                     }
                 })
-                .catch(err => "Error from getAccount: " + err)
+                .catch(err => "*** Error from getAccount: " + err)
+                .finally(console.log("Back from getArticle()"));
         }
     })
 });
