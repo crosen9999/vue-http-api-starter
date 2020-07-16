@@ -3,7 +3,13 @@
     Hello from Home
     <br />
     <br />
-    <articles style="width: 1000px; background-color: gray"></articles>
+  
+    <div v-if="this.$store.getters.userJWTToken != ''">
+      <articles style="width: 1000px; background-color: gray"></articles>
+    </div>
+    <div v-else>      
+      User is not logged in.  Not showing Articles
+    </div>
 
   </div>
 </template>

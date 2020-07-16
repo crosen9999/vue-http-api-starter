@@ -22,7 +22,6 @@ function getAllArticles() {
                     .then((rows) => {
                         console.log("Rows returned: " + rows.length);
                         res(rows);
-                        console.log("Connection state: " + conn.state);
                         conn.release();
                 })
                 .catch(err => {
@@ -46,7 +45,6 @@ function getArticle(ArticleID) {
                     .then((rows) => {
                         console.log("Rows returned: " + rows.length);
                         res(rows);
-                        console.log("Connection state: " + conn.state);
                         conn.release();
                 })
                 .catch(err => {

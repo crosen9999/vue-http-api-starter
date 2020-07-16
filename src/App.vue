@@ -9,18 +9,13 @@
         View A
       </router-link>
       <button v-if="this.$store.getters.userJWTToken != ''" @click="logout">Logout</button>
+      <button v-else @click="login">Login</button>
+
     </header>
 
-      <section v-if="this.$store.getters.userJWTToken != ''">
-        <div style="float-left">
-          <router-view />
-        </div>
-      </section>
-      <section v-else>
-          <br>
-          This is App.vue.  Please login
-          <button @click="login">Login</button>
-      </section>  
+      <div>
+        <router-view />
+      </div>
 
   </div>
 </template>
