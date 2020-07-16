@@ -76,10 +76,10 @@ app.get('/api/login', (req, res) => {
     });
 })
 
-// Articles
-app.get('/api/articles', checkForToken, function(req, res) {
+// generic get handler
+function handleDBGet(dbFunction, iParams, req, res){
     console.log("***********************************************");
-    console.log("Getting articles");
+    console.log("Start generic handler");
     res.setHeader('Access-Control-Allow-Origin', '*');
     jwt.verify(req.token, JWT_SECRET, (err, authData) => {
         console.log("Verified for user: " + authData.userID);
@@ -88,7 +88,7 @@ app.get('/api/articles', checkForToken, function(req, res) {
             res.sendStatus(403);
       } else {
             res.writeHead(200, {'ContentType': 'text/html'});
-            db.getAllArticles()
+            dbFunction(... iParams)
                 .then(rows => {
                     console.log("Processing result");
                     if (rows.length == 0) {
@@ -96,44 +96,30 @@ app.get('/api/articles', checkForToken, function(req, res) {
                         res.end('{"result": "no data"}');
                     }
                     else {
-                        console.log("Data found for article " + rows[0].ArticleID);
+                        console.log("Data found");
                         console.log(JSON.stringify(rows));
                         res.end(JSON.stringify(rows));
                     }
                 })
-                .catch(err => "*** Error from getAllArticles: " + err)  
-                .finally(console.log("Back from getArticles()"));          
+                .catch(err => "*** Error from dbFunction: " + err)  
+                .finally(console.log("Back from DB call"));          
         }
-    })    
+    })     
+}
+
+// Articles
+app.get('/api/articles', checkForToken, function(req, res) {
+    console.log("***********************************************");
+    console.log("Getting articles");
+    handleDBGet(db.getAllArticles, [], req, res)
 });
 
 //Article
 app.get('/api/article', checkForToken, function(req, res) {
     console.log("***********************************************");
+    console.log("Getting article");
     searchTerm = req.query.articleid;
-    console.log("Searching for: " + searchTerm);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    jwt.verify(req.token, JWT_SECRET, (err, authData) => {
-        if(err) {
-           res.sendStatus(403);
-        } else {
-            db.getArticle(searchTerm)
-                .then(rows => {
-                    console.log("Processing result");
-                    if (rows.length == 0) {
-                        console.log("No data");
-                        res.end('{"result": "no data"}');
-                    }
-                    else {
-                        console.log("Data found for " + rows[0].ArticleID);
-                        console.log(JSON.stringify(rows));
-                        res.end(JSON.stringify(rows));
-                    }
-                })
-                .catch(err => "*** Error from getAccount: " + err)
-                .finally(console.log("Back from getArticle()"));
-        }
-    })
+    handleDBGet(db.getArticle, [searchTerm], req, res);
 });
 
 //Article update
