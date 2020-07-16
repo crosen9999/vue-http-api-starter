@@ -60,6 +60,33 @@ function getArticle(ArticleID) {
     })
 }
 
+function updateArticle(articleID, articleName, articleText) {
+    return new Promise( (res, rej) => {
+        pool.getConnection()
+            .then(conn => {
+                console.log("Updated article name: " + articleName);
+                conn.query("update Article set ArticleName = '" 
+                    + articleName + "', ArticleText = '" 
+                    + articleText + "' where ArticleID = " + articleID)
+                    .then((rows) => {
+                        console.log("Rows returned: " + rows.affectedRows);
+                        res(rows);
+                        conn.release();
+                })
+                .catch(err => {
+                    console.log("DB Query Error: " + err);
+                    conn.release();
+                    rej("Query did not execute");
+                })
+            }).catch(err => {
+                console.log("DB Connection error");
+                conn.release();
+                rej("DB Connection error");
+            });
+    })
+}
+
 module.exports.validateUser = validateUser;
 module.exports.getAllArticles = getAllArticles;
 module.exports.getArticle = getArticle;
+module.exports.updateArticle = updateArticle;

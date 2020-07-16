@@ -3,9 +3,26 @@
   <div class="hello">
     <br />
         Hello from Article
+        <router-link :to="{
+                  name: 'ArticleView', 
+                  params: {
+                    'ArticleID': Article.ArticleID,
+                    'edit': true
+                    }
+                    }">EDIT</router-link>
         <br />
+      <div v-if="this.edit">
+          Editing article id {{Article.ArticleID}}<br>
+          <form>
+            Article Name: <input type=text v-model="ArticleUpdate.ArticleName"><br>
+            Article Text: <textarea rows="20" cols="30" v-model="ArticleUpdate.ArticleText"></textarea><br>
+            <button @click="saveArticle">SAVE</button>
+          </form>
+      </div>
+      <div v-else>
         {{ArticleID}}<br />
         {{Article.ArticleText}}
+      </div>
   </div>
 
 </template>
@@ -16,12 +33,17 @@
       name: "Article",
         data() {
             return {
-                Article: {}
+                Article: {},
+                ArticleUpdate: {}
                 }
         },
       props: {
           ArticleID: {
             type: Number,
+            required: true
+          },
+          edit: {
+            type: Boolean,
             required: true
           }
       },
@@ -54,12 +76,56 @@
                 {
                     console.log("ArticleText found: " + data[0].ArticleText);
                     this.Article = data[0];
+                    this.ArticleUpdate = this.Article;
+                }
+            })
+            .catch( err => console.log("Error retrieving data: " + err));
+          },
+        saveArticle: function(e) {
+            e.preventDefault();
+            console.log("Saving data for: " + this.ArticleID);
+            const url = "https://localhost:8001/api/article" 
+            const bearer = this.$store.getters.userJWTToken;
+
+            fetch(
+                  url, {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': bearer,
+                    'Content-Type': 'application/json'
+                    },
+                  body: JSON.stringify({
+                            ArticleID: this.Article.ArticleID,
+                            ArticleName: this.ArticleUpdate.ArticleName,
+                            ArticleText: this.ArticleUpdate.ArticleText
+                            })
+                  }
+            )
+            .then( (response) => {
+                console.log("Converting data to json");
+                return response.json();
+            })            
+            .then( (response) => {
+                console.log("Converted response: " + response)
+                if (response != 0) {
+                    console.log("DB error: " + response);
+                } else
+                {
+                    console.log("DB success");
+                    this.$router.push({
+                                  name: 'ArticleView',
+                                  params: {
+                                    'ArticleID': Number(this.Article.ArticleID),
+                                    'edit': Boolean(false)
+                                    }
+                    })
                 }
             })
             .catch( err => console.log("Error retrieving data: " + err));
           }
         }
       }
+
 
 </script>
 

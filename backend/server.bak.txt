@@ -7,11 +7,11 @@ const JWT_SECRET = "thisisthekey"
 
 //////////////////////////  Web Static Assets /////////////////////////
 const fs = require('fs')
-const expressW = require("express");
+const express = require("express");
 const httpsW = require("https");
 
-const appW = expressW();
-appW.use(expressW.static(STATIC_DIR));
+const appW = express();
+appW.use(express.static(STATIC_DIR));
 
 const key = fs.readFileSync(__dirname + '/server.key');
 const cert = fs.readFileSync(__dirname + '/server.cert');
@@ -30,15 +30,13 @@ console.log("Server started.")
 
 //////////////////////////  API /////////////////////////
 const db = require("./dbManager");
-const express = require('express');
+const app = require('express')();
 const https = require('https');
 const jwt = require('jsonwebtoken');
 const cors = require('cors')        //solves cross-origin issue not solved by setting CORS header normally 
-
-app = express();
+const { request } = require('http')
 app.options('*', cors())
-app.use(express.json()) // for parsing application/json
-app.use(express.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+//app.use(express.JSON);
 
 const server = https.createServer(
 	    {
@@ -139,24 +137,29 @@ app.get('/api/article', checkForToken, function(req, res) {
 //Article update
 app.post('/api/article', checkForToken, function(req, res) {
     console.log("***********************************************");
-    //console.log("body: " + JSON.stringify(req.body));
-    console.log("Saving article for: " + req.body.ArticleID);
+    articleID = req.query.articleid;
+    articleName = req.query.articlename;
+    articleText = req.query.articletext;
+
+    console.log("Saving article for: " + articleID);
+    console.log("ArticleName = " + articleName);
+    console.log("URL = " + req.originalUrl);
     res.setHeader('Access-Control-Allow-Origin', '*');
-    res.writeHead(200, {'ContentType': 'text/html'});    
     jwt.verify(req.token, JWT_SECRET, (err, authData) => {
         if(err) {
            res.sendStatus(403);
         } else {
-            db.updateArticle(req.body.ArticleID, req.body.ArticleName, req.body.ArticleText)
-                .then(dbres => {
-                    console.log("DB rows affected: " + dbres.affectedRows);
-                    if (dbres.affectedRows == 1) {
-                        console.log("DB success: " + JSON.stringify(dbres));
-                        res.end("0");
+            db.updateArticle(articleID, articleName, articleText)
+                .then(rows => {
+                    console.log("Processing result");
+                    if (rows.length == 0) {
+                        console.log("No data");
+                        res.end('{"result": "no data"}');
                     }
                     else {
-                        console.log("DB error: wrong number rows affected");
-                        res.end("-1");
+                        console.log("Data found for " + rows[0].ArticleID);
+                        console.log(JSON.stringify(rows));
+                        res.end(JSON.stringify(rows));
                     }
                 })
                 .catch(err => "*** Error from getAccount: " + err)
@@ -170,7 +173,6 @@ app.post('/api/article', checkForToken, function(req, res) {
 function checkForToken(req, res, next) {
     console.log("***************************************")
     console.log("Verifying token");
-
     const bearerHeader = req.headers['authorization'];
     if (typeof(bearerHeader) !== 'undefined'){
         const bearerToken = bearerHeader.split(' ')[1];

@@ -4,12 +4,16 @@
 
       <div class="article-list" style="width: 300px; height: 500px; float: left; border 1px solid">
         <div v-for="Article in Articles" :key="Article.ArticleID">
-            <router-link :to="{name: 'ArticleView', params: {'ArticleID': Article.ArticleID}}">{{Article.ArticleName}}</router-link>
+            <router-link :to="{name: 'ArticleView', params: {
+                                      'ArticleID': Article.ArticleID,
+                                      'edit': false
+                                      }}">
+                                      {{Article.ArticleName}}</router-link>
         </div>
       </div>
 
       <div class="article-selection" style="border: 1px red solid; float: left; width: 500px">
-        <router-view :key="$route.path"></router-view>
+        <router-view :key="$route.fullPath"></router-view>
       </div>
  
     </div>

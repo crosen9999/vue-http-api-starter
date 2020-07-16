@@ -1,0 +1,55 @@
+<html>
+<head>
+</head>
+<body>
+
+<form action="https://localhost:8001/api/article" method="post">
+  <label for="fname">First name:</label>
+  <input type="text" id="fname" name="fname"><br><br>
+  <label for="lname">Last name:</label>
+  <input type="text" id="lname" name="lname"><br><br>
+  <input type="submit" value="Submit">
+</form>
+
+<button onclick="update()">UPDATE</button>
+
+<script>
+function update() {
+            console.log("Updating: ");
+            const url = "https://localhost:8001/api/article?articleid=1" 
+
+            fetch(
+                  url, {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySUQiOiIxIiwidXNlck5hbWUiOiJqb2huIiwiaWF0IjoxNTk0ODc5NDYwfQ.Kg6t34bCMwyE7wi6C1ohIoBCq8Vl9qN0khax5OXr_CI'
+                    },
+                  body: {ArticleID                  
+                  }
+            )
+            .then( (response) => {
+                console.log("Converting data to json");
+                return response.json();
+            })
+            .then( (data) => {
+                if (typeof(data[0].ArticleID)=="undefined") {
+                    console.log("No data found.");
+                    this.Article.ArticleText = "";
+                } else
+                {
+                    console.log("ArticleText found: " + data[0].ArticleText);
+                    this.Article = data[0];
+                    this.$router.push({
+                                  name: 'ArticleView',
+                                  params: {
+                                    'ArticleID': Number(this.Article.ArticleID),
+                                    'edit': Boolean(false)
+                                    }
+                    })
+                }
+            })
+            .catch( err => console.log("Error retrieving data: " + err));
+}
+</script>
+</body>
+</html>
