@@ -8,15 +8,22 @@ const routes = [
     path: "/",
     name: "Home",
     component: () =>
-      import(/* webpackChunkName: "y" */ "../views/Home.vue"),
-    children: [
+      import(/* webpackChunkName: "y" */ "../views/ViewArticles.vue"),
+      children: [
       {
         path: "/articleview/:ArticleID/:edit",
-        name: "ArticleView",
+        name: "ViewArticle",
         props: true,
         component: () => 
           import(/* webpackChunkName: "article" */ "../components/Article.vue")
-      }
+      },
+      {
+        path: "/articleadd/",
+        name: "AddArticle",
+        props: true,
+        component: () => 
+          import(/* webpackChunkName: "article" */ "../views/AddArticle.vue")
+      },
     ]
   },
   {
@@ -30,5 +37,6 @@ const routes = [
 const router = new VueRouter({
   routes
 });
+
 
 export default router;

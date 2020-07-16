@@ -4,12 +4,12 @@
     <br />
         Hello from Article
         <router-link :to="{
-                  name: 'ArticleView', 
+                  name: 'ViewArticle', 
                   params: {
                     'ArticleID': Article.ArticleID,
                     'edit': true
                     }
-                    }">EDIT</router-link>
+                    }">[EDIT]</router-link>
         <br />
       <div v-if="this.edit">
           Editing article id {{Article.ArticleID}}<br>
@@ -31,7 +31,7 @@
 
     export default {
       name: "Article",
-        data() {
+      data() {
             return {
                 Article: {},
                 ArticleUpdate: {}
@@ -50,6 +50,11 @@
       mounted() {
         this.getArticle();
       },
+      // beforeRouteUpdate: (to, from ,next) =>{
+      //   alert(from.name);
+      //   alert(to.name);
+      //   next();
+      // },      
       methods: {
         getArticle: function() {
             console.log("Getting data for: " + this.ArticleID);
@@ -82,6 +87,7 @@
             .catch( err => console.log("Error retrieving data: " + err));
           },
         saveArticle: function(e) {
+            this.$emit("updatenow");
             e.preventDefault();
             console.log("Saving data for: " + this.ArticleID);
             const url = "https://localhost:8001/api/article" 
@@ -113,7 +119,7 @@
                 {
                     console.log("DB success");
                     this.$router.push({
-                                  name: 'ArticleView',
+                                  name: 'ViewArticle',
                                   params: {
                                     'ArticleID': Number(this.Article.ArticleID),
                                     'edit': Boolean(false)

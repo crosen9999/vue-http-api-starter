@@ -3,8 +3,18 @@
     <div class="article-container" style="border: 1px solid grey; background-color: #555; width: 800px; height 700px">
 
       <div class="article-list" style="width: 300px; height: 500px; float: left; border 1px solid">
+
+        <router-link :to="{
+                  name: 'AddArticle', 
+                  params: {
+                    'edit': true
+                    }
+                    }">[ADD]</router-link>
+        <br />
+
         <div v-for="Article in Articles" :key="Article.ArticleID">
-            <router-link :to="{name: 'ArticleView', params: {
+            <a href="" @click="deleteArticle">[DEL] | </a>
+            <router-link :to="{name: 'ViewArticle', params: {
                                       'ArticleID': Article.ArticleID,
                                       'edit': false
                                       }}">
@@ -13,7 +23,7 @@
       </div>
 
       <div class="article-selection" style="border: 1px red solid; float: left; width: 500px">
-        <router-view :key="$route.fullPath"></router-view>
+        <router-view :key="$route.fullPath" v-on:updatenow="updateNow"></router-view>
       </div>
  
     </div>
@@ -32,6 +42,13 @@
             this.getArticles();
         },
         methods: {
+            updateNow: function () {},
+            addArticle: function (e) {
+              e.preventDefault();
+            },
+            deleteArticle: function () {
+
+            },
             getArticles: function() {
                 console.log("Getting data");
                 const url = "https://localhost:8001/api/articles";
