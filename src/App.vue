@@ -5,12 +5,10 @@
       <router-link :to="{name: 'Home'}">
         Home
       </router-link>
-
       <router-link :to="{name: 'ViewA'}"> 
         View A
       </router-link>
       <button v-if="this.$store.getters.userJWTToken != ''" @click="logout">Logout</button>
-
     </header>
 
       <section v-if="this.$store.getters.userJWTToken != ''">
@@ -20,7 +18,7 @@
       </section>
       <section v-else>
           <br>
-          Please login
+          This is App.vue.  Please login
           <button @click="login">Login</button>
       </section>  
 
