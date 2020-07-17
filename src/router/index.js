@@ -6,7 +6,7 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Home",
+    name: "ViewArticles",
     component: () =>
       import(/* webpackChunkName: "y" */ "../views/ViewArticles.vue"),
       children: [
@@ -15,7 +15,7 @@ const routes = [
         name: "ViewArticle",
         props: true,
         component: () => 
-          import(/* webpackChunkName: "article" */ "../components/Article.vue")
+          import(/* webpackChunkName: "article" */ "../views/ViewArticle.vue")
       },
       {
         path: "/articleadd/",

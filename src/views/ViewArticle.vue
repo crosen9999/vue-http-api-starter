@@ -2,13 +2,11 @@
   <div class="hello">
     Hello from Article View
     <br />
-    <br />
-  
     <div v-if="this.$store.getters.userJWTToken != ''">
-      <article style="width: 1000px; background-color: gray"></articles>
+      <Article :ArticleID="ArticleID" :edit="edit" />
     </div>
     <div v-else>      
-      User is not logged in.  Not showing Articles
+      User is not logged in.  Not showing Articles.
     </div>
 
   </div>
@@ -18,6 +16,16 @@
     import Article from "@/components/Article"
 
     export default {
+      props: {
+          ArticleID: {
+            type: Number,
+            required: true
+          },
+          edit: {
+            type: Boolean,
+            required: true
+          }
+      },        
       components: {
           Article
       },

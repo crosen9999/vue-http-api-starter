@@ -1,8 +1,7 @@
 <template>
 
   <div class="hello">
-    <br />
-        Hello from Article
+
         <router-link :to="{
                   name: 'ViewArticle', 
                   params: {
@@ -11,6 +10,7 @@
                     }
                     }">[EDIT]</router-link>
         <br />
+
       <div v-if="this.edit">
           Editing article id {{Article.ArticleID}}<br>
           <form>
@@ -131,7 +131,6 @@
           }
         }
       }
-
 
 </script>
 

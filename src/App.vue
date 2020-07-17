@@ -1,21 +1,21 @@
 <template>
   <div id="app">
-
+    <!-- Navigation -->
     <header>
-      <router-link :to="{name: 'Home'}">
-        Home
+      <router-link :to="{name: 'ViewArticles'}">
+        View Articles
       </router-link>
       <router-link :to="{name: 'ViewA'}"> 
         View A
       </router-link>
       <button v-if="this.$store.getters.userJWTToken != ''" @click="logout">Logout</button>
       <button v-else @click="login">Login</button>
-
     </header>
 
-      <div>
-        <router-view />
-      </div>
+    <!-- MAIN CONTENT: top level view -->
+    <div>
+      <router-view />
+    </div>
 
   </div>
 </template>

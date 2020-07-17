@@ -1,9 +1,10 @@
 <template>
   <div class="hello">
-    Hello from Home
-    <br />
-    <br />
+
+    Hello from ViewArticles
+    <br /><br />
   
+    <!-- Articles -->
     <div v-if="this.$store.getters.userJWTToken != ''">
       <articles style="width: 1000px; background-color: gray"></articles>
     </div>

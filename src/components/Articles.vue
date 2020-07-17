@@ -42,13 +42,17 @@
             this.getArticles();
         },
         methods: {
+
             updateNow: function () {},
+
             addArticle: function (e) {
               e.preventDefault();
             },
+
             deleteArticle: function () {
 
             },
+            
             getArticles: function() {
                 console.log("Getting data");
                 const url = "https://localhost:8001/api/articles";
@@ -78,7 +82,6 @@
             }
         }
     }
-
 
 </script>
 
