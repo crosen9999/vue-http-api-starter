@@ -43,9 +43,11 @@ export default {
       })
       .then( (data) => {
           if (typeof(data)=="undefined") {
-              console.log("No data found.");
+            console.log("Login failed")
+            console.log("No data found.");
           } else
           {
+              console.log("Login successful.")
               console.log(data);
               this.$store.commit('setUserJWT', "Bearer " + data);
           }

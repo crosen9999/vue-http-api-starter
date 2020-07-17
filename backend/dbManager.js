@@ -86,7 +86,68 @@ function updateArticle(articleID, articleName, articleText) {
     })
 }
 
+function deleteArticle(articleID) {
+    dbQueryString = `
+                    DELETE
+                    FROM article
+                    WHERE ArticleID = ${articleID}
+                    `
+    return new Promise( (res, rej) => {
+        pool.getConnection()
+            .then(conn => {
+                console.log("Deleting article with ID: " + articleID);
+                conn.query(dbQueryString)
+                    .then((rows) => {
+                        console.log("Rows returned: " + rows.affectedRows);
+                        res(rows);
+                        conn.release();
+                })
+                .catch(err => {
+                    console.log("DB Query Error: " + err);
+                    conn.release();
+                    rej("Query did not execute");
+                })
+            }).catch(err => {
+                console.log("DB Connection error");
+                conn.release();
+                rej("DB Connection error");
+            });
+    })
+}
+
+function addArticle(articleName, articleText) {
+    dbQueryString = `
+                    INSERT
+                    INTO article (ArticleName, ArticleText)
+                    VALUES ("${articleName}", "${articleText}")
+                    `
+    console.log(dbQueryString);
+    return new Promise( (res, rej) => {
+        pool.getConnection()
+            .then(conn => {
+                console.log("Updated article name: " + articleName);
+                conn.query(dbQueryString)
+                    .then((rows) => {
+                        console.log("Rows returned: " + rows.affectedRows);
+                        res(rows);
+                        conn.release();
+                })
+                .catch(err => {
+                    console.log("DB Query Error: " + err);
+                    conn.release();
+                    rej("Query did not execute");
+                })
+            }).catch(err => {
+                console.log("DB Connection error");
+                conn.release();
+                rej("DB Connection error");
+            });
+    })
+}
+
 module.exports.validateUser = validateUser;
 module.exports.getAllArticles = getAllArticles;
 module.exports.getArticle = getArticle;
 module.exports.updateArticle = updateArticle;
+module.exports.addArticle = addArticle;
+module.exports.deleteArticle = deleteArticle;

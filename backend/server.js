@@ -53,16 +53,25 @@ server.listen(API_PORT);
 console.log("Server started.")
 
 // DEBUG End Point
-counter=1;
-charIndex = 65;
 app.get('/debug', function(req, res) {
-    if (charIndex > 75) charIndex = 65;
-    letter = String.fromCharCode(charIndex);
-    output = `{"NextItem": "${letter}"}`;
-    console.log("Sending: " + output);
-    res.writeHead(200, {'ContentType': 'text/html'});
-    res.end(output);
-    charIndex++;
+    console.log("***********************************************");
+    console.log("DB Add")
+    //db.updateArticle(req.body.ArticleID, req.body.ArticleName, req.body.ArticleText)
+    db.addArticle("x", "y")
+    .then(dbres => {
+        console.log("DB rows affected: " + dbres.affectedRows);
+        if (dbres.affectedRows == 1) {
+            console.log("DB success: " + JSON.stringify(dbres));
+            res.end(JSON.stringify(dbres))
+        }
+        else {
+            console.log("DB error: wrong number rows affected");
+            res.end(dbres)
+        }
+    })
+    .catch(err => "*** Error from getAccount: " + err)
+    .finally(console.log("Back from getArticle()"));
+
 });
 
 //Login
@@ -97,24 +106,24 @@ function handleDBGet(dbFunction, iParams, req, res){
                     }
                     else {
                         console.log("Data found");
-                        console.log(JSON.stringify(rows));
+                        console.log(JSON.stringify(rows).substring(0,50));
                         res.end(JSON.stringify(rows));
                     }
                 })
-                .catch(err => "*** Error from dbFunction: " + err)  
+                .catch(err => "console.log(*** Error from dbFunction: " + err)  
                 .finally(console.log("Back from DB call"));          
         }
     })     
 }
 
-// Articles
+// Articles GET
 app.get('/api/articles', checkForToken, function(req, res) {
     console.log("***********************************************");
     console.log("Getting articles");
     handleDBGet(db.getAllArticles, [], req, res)
 });
 
-//Article
+//Article GET
 app.get('/api/article', checkForToken, function(req, res) {
     console.log("***********************************************");
     console.log("Getting article");
@@ -122,8 +131,8 @@ app.get('/api/article', checkForToken, function(req, res) {
     handleDBGet(db.getArticle, [searchTerm], req, res);
 });
 
-//Article update
-app.post('/api/article', checkForToken, function(req, res) {
+//Article PUT
+app.put('/api/article', checkForToken, function(req, res) {
     console.log("***********************************************");
     //console.log("body: " + JSON.stringify(req.body));
     console.log("Saving article for: " + req.body.ArticleID);
@@ -145,16 +154,72 @@ app.post('/api/article', checkForToken, function(req, res) {
                         res.end("-1");
                     }
                 })
-                .catch(err => "*** Error from getAccount: " + err)
-                .finally(console.log("Back from getArticle()"));
+                .catch(err => "*** Error from updateArticle: " + err)
+                .finally(console.log("Back from updateArticle()"));
         }
     })
 });
 
+//Article DEL
+app.delete('/api/article', checkForToken, function(req, res) {
+    console.log("***********************************************");
+    //console.log("body: " + JSON.stringify(req.body));
+    console.log("Deleting article: " + req.body.ArticleID);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.writeHead(200, {'ContentType': 'text/html'});    
+    jwt.verify(req.token, JWT_SECRET, (err, authData) => {
+        if(err) {
+           res.sendStatus(403);
+        } else {
+            db.deleteArticle(req.body.ArticleID)
+                .then(dbres => {
+                    console.log("DB rows affected: " + dbres.affectedRows);
+                    if (dbres.affectedRows == 1) {
+                        console.log("DB success: " + JSON.stringify(dbres));
+                        res.end("0");
+                    }
+                    else {
+                        console.log("DB error: wrong number rows affected");
+                        res.end("-1");
+                    }
+                })
+                .catch(err => "*** Error from deleteArticle: " + err)
+                .finally(console.log("Back from deleteArticle()"));
+        }
+    })
+});
+
+//Article POST
+app.post('/api/article', checkForToken, function(req, res) {
+    console.log("***********************************************");
+    //console.log("body: " + JSON.stringify(req.body));
+    console.log("Adding article");
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.writeHead(200, {'ContentType': 'text/html'});    
+    jwt.verify(req.token, JWT_SECRET, (err, authData) => {
+        if(err) {
+           res.sendStatus(403);
+        } else {
+            db.addArticle(req.body.ArticleName, req.body.ArticleText)
+                .then(dbres => {
+                    console.log("DB rows affected: " + dbres.affectedRows);
+                    if (dbres.affectedRows == 1) {
+                        console.log("DB success: " + JSON.stringify(dbres));
+                    }
+                    else {
+                        console.log("DB error: wrong number rows affected");
+                    }
+                    res.end(JSON.stringify(dbres));
+                })
+                .catch(err => "*** Error from getAccount: " + err)
+                .finally(console.log("Back from addArticle()"));
+        }
+    })
+});
 
 //move this to helper functions
 function checkForToken(req, res, next) {
-    console.log("***************************************")
+    console.log("*************************************************")
     console.log("Verifying token");
 
     const bearerHeader = req.headers['authorization'];

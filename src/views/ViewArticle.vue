@@ -8,7 +8,6 @@
     <div v-else>      
       User is not logged in.  Not showing Articles.
     </div>
-
   </div>
 </template>
 

@@ -16,11 +16,12 @@
           <form>
             Article Name: <input type=text v-model="ArticleUpdate.ArticleName"><br>
             Article Text: <textarea rows="20" cols="30" v-model="ArticleUpdate.ArticleText"></textarea><br>
-            <button @click="saveArticle">SAVE</button>
+            <button @click="updateArticle">SAVE</button>
           </form>
       </div>
       <div v-else>
         {{ArticleID}}<br />
+        {{Article.ArticleName}}<br />
         {{Article.ArticleText}}
       </div>
   </div>
@@ -56,6 +57,7 @@
       //   next();
       // },      
       methods: {
+
         getArticle: function() {
             console.log("Getting data for: " + this.ArticleID);
             const url = "https://localhost:8001/api/article?articleid=" + this.ArticleID;
@@ -79,15 +81,15 @@
                     this.Article.ArticleText = "";
                 } else
                 {
-                    console.log("ArticleText found: " + data[0].ArticleText);
+                    console.log("Article found: " + data[0].ArticleName);
                     this.Article = data[0];
                     this.ArticleUpdate = this.Article;
                 }
             })
             .catch( err => console.log("Error retrieving data: " + err));
           },
-        saveArticle: function(e) {
-            this.$emit("updatenow");
+
+        updateArticle: function(e) {
             e.preventDefault();
             console.log("Saving data for: " + this.ArticleID);
             const url = "https://localhost:8001/api/article" 
@@ -95,7 +97,7 @@
 
             fetch(
                   url, {
-                  method: 'POST',
+                  method: 'PUT',
                   headers: {
                     'Authorization': bearer,
                     'Content-Type': 'application/json'
@@ -118,6 +120,7 @@
                 } else
                 {
                     console.log("DB success");
+                    this.$emit("updatenow");
                     this.$router.push({
                                   name: 'ViewArticle',
                                   params: {
