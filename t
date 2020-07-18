@@ -1,4 +1,4 @@
-
+#!/bin/bash
 clear
 echo "Creating tag" $1
 git add .
