@@ -1,7 +1,7 @@
 <template>
   <div class="article-container" style="width: 500px; height 700px;">
     <div v-for="Article in Articles" :key="Article.ArticleID">
-        <button @click="deleteArticle(Article.ArticleID)">DEL </button>
+        <button @click="deleteArticle(Article.ArticleID)" style="color: green; background-color:white; border: none">[DEL]</button>
         <router-link :to="{name: 'ViewArticle', params: {
                                   'ArticleID': Article.ArticleID,
                                   'edit': false
@@ -30,6 +30,7 @@
 
           deleteArticle: function (ArticleID) {
             console.log("Deleting article with ID " + ArticleID);
+
             const url = "https://localhost:8001/api/article" 
             const bearer = this.$store.getters.userJWTToken;
 
@@ -69,7 +70,7 @@
           },
 
       getArticles: function() {
-          console.log("Getting data");
+          console.log("Articles.getArticles()********************");
           const url = "https://localhost:8001/api/articles";
           const bearer = this.$store.getters.userJWTToken;
           fetch(
@@ -81,15 +82,15 @@
                 }
           )
           .then( (response) => {
-              console.log("Converting data to json");
+              console.log("Received response.  Converting data to json");
               return response.json();
           })
           .then( (data) => {
               if (typeof(data[0].ArticleID)=="undefined") {
-                  console.log("No data found.");
+                  console.log("No ArticleID found in response.");
               } else
               {
-                  console.log("Data found");
+                  console.log("Data is valid,");
                   this.Articles = data;
               }
           })

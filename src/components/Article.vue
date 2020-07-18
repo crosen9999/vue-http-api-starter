@@ -1,6 +1,6 @@
 <template>
 
-  <div class="hello">
+  <div class="hello" style="font-family: helvetica">
 
       <router-link :to="{
                 name: 'ViewArticle', 
@@ -8,22 +8,21 @@
                   'ArticleID': Article.ArticleID,
                   'edit': true
                   }
-                  }" style="text-align: right" v-if="!this.edit">[EDIT]</router-link>
+                  }" style="float: right" v-if="!this.edit">[EDIT]</router-link>
       <br />
 
       <div v-if="this.edit">
-          Editing article id {{Article.ArticleID}}<br>
-          <form>
-            Article Name: <input type=text v-model="ArticleUpdate.ArticleName"><br>
-            <vue-editor v-model="ArticleUpdate.ArticleText"></vue-editor>
-            <button @click="updateArticle">SAVE</button>
+          <form style="margin: 20px; height: 600px">
+            Article Name: <input style="width: 100%;" type=text v-model="ArticleUpdate.ArticleName"><br><br>
+            <vue-editor style="width: 100%; margin-bottom: 10px; height: 500px; overflow: scroll" v-model="ArticleUpdate.ArticleText"></vue-editor>
+            <button style="float: right;" @click="cancelEdit">CANCEL</button>
+            <button style="float: right; margin-right: 10px" @click="updateArticle">SAVE</button>
           </form>
       </div>
   
-      <div v-else>
-        {{ArticleID}}<br />
-        {{Article.ArticleName}}<br />
-        <span v-html="ArticleUpdate.ArticleText"></span>
+      <div v-else style="margin: 10px">
+        {{Article.ArticleName}}<br /><hr style="border: 1px solid #ddd">
+        <div style="height: 500px; overflow: scroll" v-html="ArticleUpdate.ArticleText"></div>
       </div>
   
   </div>
@@ -64,6 +63,16 @@ export default {
       //   next();
       // },      
       methods: {
+        
+        cancelEdit: function() {
+          this.$router.push({
+                        name: 'ViewArticle',
+                        params: {
+                          'ArticleID': Number(this.Article.ArticleID),
+                          'edit': Boolean(false)
+                          }
+          })
+        },
 
         getArticle: function() {
             console.log("Getting data for: " + this.ArticleID);

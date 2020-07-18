@@ -1,34 +1,17 @@
 <template>
-  <div id="app">
+  <div>
+
     <!-- Navigation -->
-    <header>
-      <div style="width: auto; height: 30px; background-color: #aaa; border: 1px #a8f solid; top: 0; left: 0; margin: 0 0 10px 0;">
-      </div>
-      <div style="margin: 20px; padding: 20px; background-color: #eee">
-        <router-link :to="{name: 'ViewArticles'}">
-          View Articles
-        </router-link>
-        <router-link :to="{name: 'ViewA'}"> 
-          View A
-        </router-link>
-        <router-link :to="{name: 'Login'}" v-if="this.$store.getters.userJWTToken == ''"> 
-          Login
-        </router-link>
-        <span v-else>
-          <a href="/" @click="logout">logout</a>
-        </span>
-      </div>
-    </header>
+      <TopNav />
 
     <!-- MAIN CONTENT: top level view -->
-    <div>
       <router-view />
-    </div>
 
   </div>
 </template>
 
 <script>
+import TopNav from "@/components/TopNav.vue"
 
 export default {
   name: 'App',
@@ -39,12 +22,16 @@ export default {
     },
   },
   components: {
-
+    TopNav
   }
 }
 </script>
 
 <style>
+body {
+  margin: 0;
+}
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;

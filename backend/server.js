@@ -90,7 +90,7 @@ app.get('/api/login', (req, res) => {
 // generic get handler
 function handleDBGet(dbFunction, iParams, req, res){
     console.log("***********************************************");
-    console.log("Start generic handler");
+    console.log("Start generic handler for dbFunction = " + dbFunction.name);
     res.setHeader('Access-Control-Allow-Origin', '*');
     jwt.verify(req.token, JWT_SECRET, (err, authData) => {
         console.log("Verified for user: " + authData.userID);

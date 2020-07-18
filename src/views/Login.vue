@@ -1,11 +1,11 @@
 <template>
   <div class="hello">
-
     <div id="id01" class="modal">
-      
       <div class="modal-content animate" action="/" method="get">
 
         <div class="container">
+          {{message}}<br><br>
+
           <label for="uname"><b>Username</b></label>
           <input type="text" placeholder="Enter Username" name="uname" xrequired>
 
@@ -22,10 +22,9 @@
           <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
           <span class="psw">Forgot <a href="#">password?</a></span>
         </div>
+
       </div>
     </div>
-
-
   </div>
 </template>
 
@@ -37,6 +36,7 @@ export default {
   name: 'Login',
   data() {
     return {
+      message: "WELCOME!!! Please login."
     } 
   },
   components: {

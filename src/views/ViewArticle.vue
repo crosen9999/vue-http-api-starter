@@ -1,7 +1,5 @@
 <template>
   <div class="hello">
-    Hello from Article View
-    <br />
     <div v-if="this.$store.getters.userJWTToken != ''">
       <Article :ArticleID="ArticleID" :edit="edit" />
     </div>

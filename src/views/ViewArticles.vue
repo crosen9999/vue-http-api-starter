@@ -1,12 +1,12 @@
 <template>
-  <div class="hello">
+  <section class="hello">
   
     <!-- Articles -->
-    <div v-if="this.$store.getters.userJWTToken != ''" style="text-align: left">
+    <div v-if="this.$store.getters.userJWTToken != ''" style="display: flex; text-align: left">
 
         <!-- Articles List -->
-        <div class="article-list" style="border: 1px solid; float: left">
-          <div>
+        <div class="article-list" style="border: 1px solid #eee; margin: 0 20px 0 10px; width: 300px">
+          <div style="float: right">
             <router-link :to="{
                       name: 'AddArticle', 
                       params: {
@@ -21,7 +21,7 @@
         </div>
 
         <!-- Article Selected -->
-        <div class="article-selection" style="float: left; max-width: 700px; margin-left: 20px; border: 1px solid;">
+        <div class="article-selection" style="width: 700px; border: 1px solid #eee; margin-right: 10px">
           <router-view :key="$route.fullPath"></router-view>
         </div>
 
@@ -30,7 +30,8 @@
       User is not logged in.  Not showing Articles
     </div>
 
-  </div>
+  </section>
+
 </template>
 
 <script>

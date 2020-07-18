@@ -1,5 +1,5 @@
 <template>
-  <div class="hello">
+  <div class="hello" style="text-align: center">
     Hello from ViewA
     <br /><br >
     <!-- <HelloWorld></HelloWorld> -->
