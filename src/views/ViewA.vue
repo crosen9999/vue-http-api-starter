@@ -10,9 +10,13 @@
 
 //import HelloWorld from "@/components/HelloWorld"
 
-
 export default {
   name: 'ViewA',
+  data() {
+    return {
+      content: ''
+    } 
+  },
   components: {
     //HelloWorld
   },

@@ -80,8 +80,10 @@ app.get('/api/login', (req, res) => {
     console.log("Login");
     res.setHeader('Access-Control-Allow-Origin', '*');
     const user = {userID: '1', userName: 'john'};
+    console.log("Sending signed token for " + user.userName);
     jwt.sign(user, JWT_SECRET, (err, token) => {
         res.json(token);
+        res.end();
     });
 })
 

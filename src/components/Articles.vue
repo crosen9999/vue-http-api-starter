@@ -1,5 +1,5 @@
 <template>
-  <div class="article-container" style="width: 500px; height 700px">
+  <div class="article-container" style="width: 500px; height 700px;">
     <div v-for="Article in Articles" :key="Article.ArticleID">
         <button @click="deleteArticle(Article.ArticleID)">DEL </button>
         <router-link :to="{name: 'ViewArticle', params: {

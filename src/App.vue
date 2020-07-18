@@ -2,14 +2,22 @@
   <div id="app">
     <!-- Navigation -->
     <header>
-      <router-link :to="{name: 'ViewArticles'}">
-        View Articles
-      </router-link>
-      <router-link :to="{name: 'ViewA'}"> 
-        View A
-      </router-link>
-      <button v-if="this.$store.getters.userJWTToken != ''" @click="logout">Logout</button>
-      <button v-else @click="login">Login</button>
+      <div style="width: auto; height: 30px; background-color: #aaa; border: 1px #a8f solid; top: 0; left: 0; margin: 0 0 10px 0;">
+      </div>
+      <div style="margin: 20px; padding: 20px; background-color: #eee">
+        <router-link :to="{name: 'ViewArticles'}">
+          View Articles
+        </router-link>
+        <router-link :to="{name: 'ViewA'}"> 
+          View A
+        </router-link>
+        <router-link :to="{name: 'Login'}" v-if="this.$store.getters.userJWTToken == ''"> 
+          Login
+        </router-link>
+        <span v-else>
+          <a href="/" @click="logout">logout</a>
+        </span>
+      </div>
     </header>
 
     <!-- MAIN CONTENT: top level view -->
@@ -25,36 +33,10 @@
 export default {
   name: 'App',
   methods: {
-    logout: function () {
+    logout: function (e) {
+      e.preventDefault();
       this.$store.commit('setUserJWT', "");
     },
-    login: function() {
-      console.log("Getting data");
-      const url = "https://localhost:8001/api/login";
-
-      fetch(url, {
-            method: 'GET',
-            headers: {
-              'Authorization': ""              }
-            })
-      .then( (response) => {
-          console.log("Converting data to json");
-          return response.json();
-      })
-      .then( (data) => {
-          if (typeof(data)=="undefined") {
-            console.log("Login failed")
-            console.log("No data found.");
-          } else
-          {
-              console.log("Login successful.")
-              console.log(data);
-              this.$store.commit('setUserJWT', "Bearer " + data);
-          }
-      })
-      .catch( err => console.log("Error logging in: " + err));
-
-    }
   },
   components: {
 
@@ -69,6 +51,6 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin-top: 0px;
 }
 </style>

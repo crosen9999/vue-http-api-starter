@@ -8,14 +8,14 @@
                   'ArticleID': Article.ArticleID,
                   'edit': true
                   }
-                  }">[EDIT]</router-link>
+                  }" style="text-align: right" v-if="!this.edit">[EDIT]</router-link>
       <br />
 
       <div v-if="this.edit">
           Editing article id {{Article.ArticleID}}<br>
           <form>
             Article Name: <input type=text v-model="ArticleUpdate.ArticleName"><br>
-            Article Text: <textarea rows="20" cols="30" v-model="ArticleUpdate.ArticleText"></textarea><br>
+            <vue-editor v-model="ArticleUpdate.ArticleText"></vue-editor>
             <button @click="updateArticle">SAVE</button>
           </form>
       </div>
@@ -23,7 +23,7 @@
       <div v-else>
         {{ArticleID}}<br />
         {{Article.ArticleName}}<br />
-        {{Article.ArticleText}}
+        <span v-html="ArticleUpdate.ArticleText"></span>
       </div>
   
   </div>
@@ -32,7 +32,9 @@
 
 <script>
 
-    export default {
+import { VueEditor } from 'vue2-editor'
+
+export default {
       name: "Article",
       data() {
             return {
@@ -40,6 +42,9 @@
                 ArticleUpdate: {}
                 }
         },
+      components: {
+        VueEditor
+      },
       props: {
           ArticleID: {
             type: Number,

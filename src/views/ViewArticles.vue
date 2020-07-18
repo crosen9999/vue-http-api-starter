@@ -1,11 +1,8 @@
 <template>
   <div class="hello">
-
-    Hello from ViewArticles
-    <br /><br />
   
     <!-- Articles -->
-    <div v-if="this.$store.getters.userJWTToken != ''">
+    <div v-if="this.$store.getters.userJWTToken != ''" style="text-align: left">
 
         <!-- Articles List -->
         <div class="article-list" style="border: 1px solid; float: left">
@@ -19,12 +16,12 @@
             <br />
           </div>    
           <div >
-                    <articles style="width: 300px"></articles>
+                    <articles style="width: 250px"></articles>
           </div>
         </div>
 
         <!-- Article Selected -->
-        <div class="article-selection" style="float: left; width: 700px; margin-left: 20px; border: 1px solid;">
+        <div class="article-selection" style="float: left; max-width: 700px; margin-left: 20px; border: 1px solid;">
           <router-view :key="$route.fullPath"></router-view>
         </div>
 
