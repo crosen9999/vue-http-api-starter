@@ -2,14 +2,14 @@
 
   <div class="hello">
 
-        <router-link :to="{
-                  name: 'ViewArticle', 
-                  params: {
-                    'ArticleID': Article.ArticleID,
-                    'edit': true
-                    }
-                    }">[EDIT]</router-link>
-        <br />
+      <router-link :to="{
+                name: 'ViewArticle', 
+                params: {
+                  'ArticleID': Article.ArticleID,
+                  'edit': true
+                  }
+                  }">[EDIT]</router-link>
+      <br />
 
       <div v-if="this.edit">
           Editing article id {{Article.ArticleID}}<br>
@@ -19,11 +19,13 @@
             <button @click="updateArticle">SAVE</button>
           </form>
       </div>
+  
       <div v-else>
         {{ArticleID}}<br />
         {{Article.ArticleName}}<br />
         {{Article.ArticleText}}
       </div>
+  
   </div>
 
 </template>

@@ -6,7 +6,28 @@
   
     <!-- Articles -->
     <div v-if="this.$store.getters.userJWTToken != ''">
-      <articles style="width: 1000px; background-color: gray"></articles>
+
+        <!-- Articles List -->
+        <div class="article-list" style="border: 1px solid; float: left">
+          <div>
+            <router-link :to="{
+                      name: 'AddArticle', 
+                      params: {
+                        'edit': true
+                        }
+                        }">[ADD]</router-link>
+            <br />
+          </div>    
+          <div >
+                    <articles style="width: 300px"></articles>
+          </div>
+        </div>
+
+        <!-- Article Selected -->
+        <div class="article-selection" style="float: left; width: 700px; margin-left: 20px; border: 1px solid;">
+          <router-view :key="$route.fullPath"></router-view>
+        </div>
+
     </div>
     <div v-else>      
       User is not logged in.  Not showing Articles

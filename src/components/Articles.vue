@@ -1,32 +1,14 @@
 <template>
-   
-    <div class="article-container" style="width: 800px; height 700px">
-
-      <div class="article-list" style="float: left">
-
-        <router-link :to="{
-                  name: 'AddArticle', 
-                  params: {
-                    'edit': true
-                    }
-                    }">[ADD]</router-link>
-        <br />
-
-        <div v-for="Article in Articles" :key="Article.ArticleID">
-            <button @click="deleteArticle(Article.ArticleID)">DEL </button>
-            <router-link :to="{name: 'ViewArticle', params: {
-                                      'ArticleID': Article.ArticleID,
-                                      'edit': false
-                                      }}">
-                                      {{Article.ArticleName}}</router-link>
-        </div>
-      </div>
-
-      <div class="article-selection" style="float: left; width: 500px">
-        <router-view :key="$route.fullPath" v-on:updatenow="updateNow"></router-view>
-      </div>
- 
+  <div class="article-container" style="width: 500px; height 700px">
+    <div v-for="Article in Articles" :key="Article.ArticleID">
+        <button @click="deleteArticle(Article.ArticleID)">DEL </button>
+        <router-link :to="{name: 'ViewArticle', params: {
+                                  'ArticleID': Article.ArticleID,
+                                  'edit': false
+                                  }}">
+                                  {{Article.ArticleName}}</router-link>
     </div>
+  </div>
 </template>
 
 <script>
