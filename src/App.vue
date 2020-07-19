@@ -5,7 +5,7 @@
       <TopNav />
 
     <!-- MAIN CONTENT: top level view -->
-      <router-view />
+      <router-view></router-view>
 
   </div>
 </template>
@@ -30,6 +30,7 @@ export default {
 <style>
 body {
   margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
 #app {

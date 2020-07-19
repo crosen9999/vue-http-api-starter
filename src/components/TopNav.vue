@@ -8,9 +8,15 @@
           <div style="padding: 5px 0 0 20px; font-size: 18pt; margin-left: 10px">Article Database</div>
 
           <div style="margin-left: auto; padding: 10px 10px 0px 0px">
-            <router-link :to="{name: 'Login'}" v-if="this.$store.getters.userJWTToken == ''"> 
-              Login
-            </router-link>
+            <div v-if="this.$store.getters.userJWTToken == ''">
+              <router-link :to="{name: 'Login'}">
+                Login
+              </router-link>
+              <span style="color: black">or</span>
+              <router-link :to="{name: 'Login'}">
+                Create an Account
+              </router-link>
+            </div>
             <div v-else>
               <a href="/" @click="logout">logout</a>
             </div>
@@ -18,7 +24,7 @@
         </div>
 
       <div style="display: flex; justify-content: center; height: 50px; font-family: helvetica; margin: 0 0 50px 0; text-align: center">
-        <router-link :to="{name: 'ViewArticles'}" style="margin-right: 30px">
+        <router-link :to="{name: 'ViewArticles', params: {refresh: 0}}" style="margin-right: 30px">
           View Articles
         </router-link>
         <router-link :to="{name: 'ViewA'}" style="margin-right: 30px"> 

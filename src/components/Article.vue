@@ -141,7 +141,8 @@ export default {
                                   name: 'ViewArticle',
                                   params: {
                                     'ArticleID': Number(this.Article.ArticleID),
-                                    'edit': Boolean(false)
+                                    'edit': Boolean(false),
+                                    'refresh': 1
                                     }
                     })
                 }

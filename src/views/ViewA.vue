@@ -2,12 +2,13 @@
   <div class="hello" style="text-align: center">
     Hello from ViewA
     <br /><br >
-    <!-- <HelloWorld></HelloWorld> -->
+    <button @click="getData">Get Data</button>
+
   </div>
 </template>
 
 <script>
-
+import axios from "axios"
 //import HelloWorld from "@/components/HelloWorld"
 
 export default {
@@ -21,6 +22,22 @@ export default {
     //HelloWorld
   },
   props: {
+  },
+  mounted() {
+  },
+  methods : {
+    getData: function() {
+axios.get(`https://api.scryfall.com/cards/named?exact=anaba%20bodyguard`)
+            .then((res) => {
+                console.log(JSON.stringify(res));
+            })
+            .catch((err) => {
+                if (err.response) {
+                    console.log("Response: " + JSON.stringify(err.response))
+                }
+                console.log("Error: " + err)
+            }) 
+    }
   }
 }
 </script>

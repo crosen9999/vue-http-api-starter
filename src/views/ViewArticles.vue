@@ -26,7 +26,7 @@
         </div>
 
     </div>
-    <div v-else>      
+    <div v-else style="text-align: center">      
       User is not logged in.  Not showing Articles
     </div>
 

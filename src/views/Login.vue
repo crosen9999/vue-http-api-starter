@@ -19,7 +19,7 @@
         </div>
 
         <div class="container" style="background-color:#f1f1f1">
-          <button type="button" onclick="document.getElementById('id01').style.display='none'" class="cancelbtn">Cancel</button>
+          <button type="button" @click="cancelLogin" class="cancelbtn">Cancel</button>
           <span class="psw">Forgot <a href="#">password?</a></span>
         </div>
 
@@ -45,6 +45,15 @@ export default {
   props: {
   },
   methods: {
+    cancelLogin: function(){
+      document.getElementById('id01').style.display='none'; 
+      this.$router.push({
+                name: 'ViewArticles',
+                params: {
+                  'refresh': 0
+                  }
+              })
+    },
     login: function(e) {
       e.preventDefault
       console.log("Getting data");
@@ -69,9 +78,9 @@ export default {
               console.log(data);
               this.$store.commit('setUserJWT', "Bearer " + data);
               this.$router.push({
-                name: 'ViewArticle',
+                name: 'ViewArticles',
                 params: {
-                  'ArticleID':1
+                  'refresh': 0
                   }
               })
           }

@@ -61,7 +61,8 @@
                                   name: 'ViewArticle',
                                   params: {
                                     'ArticleID': Number(response.insertId),
-                                    'edit': Boolean(false)
+                                    'edit': Boolean(false),
+                                    'add': 1
                                     }
                     })
                 }
