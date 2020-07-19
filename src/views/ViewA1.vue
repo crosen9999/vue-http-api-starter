@@ -1,19 +1,14 @@
 <template>
   <div class="hello" style="text-align: center">
-    Hello from ViewA
-    <br /><br >
-        <router-link :to="{name: 'ViewA1'}" style="margin-right: 30px"> 
-          Go to View A1
-        </router-link>
-        <router-view></router-view>
-   </div>
+    Hello from ViewA1
+  </div>
 </template>
 
 <script>
 //import HelloWorld from "@/components/HelloWorld"
 
 export default {
-  name: 'ViewA',
+  name: 'ViewA1',
   data() {
     return {
       content: ''

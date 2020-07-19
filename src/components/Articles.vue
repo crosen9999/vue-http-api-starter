@@ -15,6 +15,7 @@
 
     export default {
         name: "Articles",
+        
         data() {
             return {
                 Articles: []
@@ -25,8 +26,8 @@
         },
         methods: {
 
-          updateNow: function () {},
-
+          updateNow: function () {
+          },
 
           deleteArticle: function (ArticleID) {
             console.log("Deleting article with ID " + ArticleID);
@@ -57,13 +58,14 @@
                 } else
                 {
                     console.log("DB success");
-                    this.$emit("updatenow");
-                    this.$router.push({
-                                  name: 'ViewArticle',
-                                  params: {
-                                    'ArticleID':1
-                                    }
-                    })
+                    this.Articles.splice(this.Articles.findIndex(A => A.ArticleID = ArticleID)-1, 1)
+                    // this.$emit("updatenow");
+                    // this.$router.push({
+                    //               name: 'ViewArticles',
+                    //               params: {
+                    //                 'ArticleID':1
+                    //                 }
+                    // })
                 }
             })
             .catch( err => console.log("Error retrieving data: " + err));

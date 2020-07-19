@@ -13,7 +13,7 @@
                 Login
               </router-link>
               <span style="color: black">or</span>
-              <router-link :to="{name: 'Login'}">
+              <router-link :to="{name: 'CreateAccount'}">
                 Create an Account
               </router-link>
             </div>

@@ -7,20 +7,16 @@
           {{message}}<br><br>
 
           <label for="uname"><b>Username</b></label>
-          <input type="text" placeholder="Enter Username" name="uname" xrequired>
+          <input v-model='UserName' type="text" placeholder="Enter Username" name="uname" required>
 
           <label for="psw"><b>Password</b></label>
-          <input type="password" placeholder="Enter Password" name="psw" xrequired>
+          <input v-model="Password" type="password" placeholder="Enter Password" name="psw" required>
             
-          <button type="submit" @click="login">Login</button>
-          <label>
-            <input type="checkbox" checked="checked" name="remember"> Remember me
-          </label>
+          <button type="submit" @click="createAccount">Create Account</button>
         </div>
 
         <div class="container" style="background-color:#f1f1f1">
           <button type="button" @click="cancelLogin" class="cancelbtn">Cancel</button>
-          <span class="psw">Forgot <a href="#">password?</a></span>
         </div>
 
       </div>
@@ -36,10 +32,13 @@ export default {
   name: 'Login',
   data() {
     return {
-      message: "WELCOME!!! Please login."
+      message: "WELCOME!!! Please provide a username and password.",
+      UserName: "",
+      Password: ""
     } 
   },
   components: {
+    //HelloWorld
   },
   props: {
   },
@@ -53,41 +52,45 @@ export default {
                   }
               })
     },
-    login: function(e) {
-      e.preventDefault
-      console.log("Getting data");
-      const url = "https://localhost:8001/api/login";
+    createAccount: function(e) {
+        e.preventDefault
+        console.log("creating account");
+        const url = "https://localhost:8001/api/createuser";
 
-      fetch(url, {
+        fetch(
+            url, {
             method: 'POST',
-            headers: {'Authorization': ""}
-            })
-      .then( (response) => {
-          console.log("Converting response to json");
-          return response.json();
-      })
-      .then( (data) => {
-
-          if (data=="undefined") {
-            console.log("Login failed")
-            console.log("No data found.");
-          } else
-          {
-            console.log("Login successful.")
-            console.log("Converted response: " + data);
-            this.$store.commit('setUserJWT', "Bearer " + data);
-            this.$router.push({
-              name: 'ViewArticles',
-              params: {
-                'refresh': 0
-                }
-            })
-          }
-      })
-      .catch( err => console.log("Error logging in: " + err));
-
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify({
+                        UserName: this.UserName,
+                        Password: this.Password
+                        })
+            }
+        )
+        .then( (response) => {
+            console.log("Converting data to json");
+            return response.json();
+        })            
+        .then( (data) => {
+            console.log("data = " + data);
+            // if (data=="-1") {
+            //     console.log("Login error");
+            //     this.message = "Error, please try again";
+            // } else
+            {
+                console.log("Login success.  New bearer = " + data);
+                // this.$store.commit('setUserJWT', "Bearer " + data);
+                // this.$router.push({
+                //             name: 'ViewArticles',
+                //             params: {
+                //                 }
+                // })
+            }
+        })
+        .catch( err => console.log("Error retrieving data: " + err));
     }
-
   }
 }
 </script>

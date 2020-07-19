@@ -29,47 +29,47 @@
       methods: {
         //{"affectedRows":1,"insertId":10,"warningStatus":0}
         addArticle: function() {
-            console.log("Adding new article");
-            const url = "https://localhost:8001/api/article";
-            const bearer = this.$store.getters.userJWTToken;
+          console.log("Adding new article");
+          const url = "https://localhost:8001/api/article";
+          const bearer = this.$store.getters.userJWTToken;
 
-            fetch(
-                  url, {
-                  method: 'POST',
-                  headers: {
-                    'Authorization': bearer,
-                    'Content-Type': 'application/json'
-                    },
-                  body: JSON.stringify({
-                            ArticleName: this.ArticleName,
-                            ArticleText: this.ArticleText
-                            })
-                  }
-            )
-            .then( (response) => {
-                console.log("Converting data to json");
-                return response.json(response);
-            })            
-            .then( (response) => {
-                console.log("Converted response: " + JSON.stringify(response))
-                if (response.warningStatus != 0) {
-                    console.log("DB error");
-                } else
-                {
-                    console.log("DB success.  New articleid = " + response.insertId);
-                    this.$router.push({
-                                  name: 'ViewArticle',
-                                  params: {
-                                    'ArticleID': Number(response.insertId),
-                                    'edit': Boolean(false),
-                                    'add': 1
-                                    }
-                    })
+          fetch(
+                url, {
+                method: 'POST',
+                headers: {
+                  'Authorization': bearer,
+                  'Content-Type': 'application/json'
+                  },
+                body: JSON.stringify({
+                          ArticleName: this.ArticleName,
+                          ArticleText: this.ArticleText
+                          })
                 }
-            })
-            .catch( err => console.log("Error retrieving data: " + err));
-          }
-       }
+          )
+          .then( (response) => {
+              console.log("Converting data to json");
+              return response.json(response);
+          })            
+          .then( (response) => {
+              console.log("Converted response: " + JSON.stringify(response))
+              if (response.warningStatus != 0) {
+                  console.log("DB error");
+              } else
+              {
+                  console.log("DB success.  New articleid = " + response.insertId);
+                  this.$router.push({
+                                name: 'ViewArticle',
+                                params: {
+                                  'ArticleID': Number(response.insertId),
+                                  'edit': Boolean(false),
+                                  'add': 1
+                                  }
+                  })
+              }
+          })
+          .catch( err => console.log("Error retrieving data: " + err));
+        }
+      }
     }
 
 </script>

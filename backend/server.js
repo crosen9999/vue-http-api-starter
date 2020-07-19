@@ -34,6 +34,8 @@ const express = require('express');
 const https = require('https');
 const jwt = require('jsonwebtoken');
 const cors = require('cors')        //solves cross-origin issue not solved by setting CORS header normally 
+const { request } = require('http')
+const { response } = require('express')
 
 app = express();
 app.options('*', cors())
@@ -71,11 +73,32 @@ app.get('/debug', function(req, res) {
     })
     .catch(err => "*** Error from getAccount: " + err)
     .finally(console.log("Back from getArticle()"));
-
 });
 
+//Create User
+app.post('/api/createuser', (req, res) => {
+    console.log("***********************************************");
+    console.log("Create User: " + req.body.UserName);
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    const user = {userID: '1', userName: 'john'};
+    console.log("Sending signed token for " + user.userName);
+
+    let success = false
+    if (success==true) {
+        jwt.sign(user, JWT_SECRET, (err, token) => {
+            console.log("token = " + token)
+            res.json(token);
+            res.end();
+        });
+    } else {
+        console.log()
+        res.json({token: "-1"});
+        res.end();
+    }
+})
+
 //Login
-app.get('/api/login', (req, res) => {
+app.post('/api/login', (req, res) => {
     console.log("***********************************************");
     console.log("Login");
     res.setHeader('Access-Control-Allow-Origin', '*');
