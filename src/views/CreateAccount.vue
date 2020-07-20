@@ -74,19 +74,24 @@ export default {
             return response.json();
         })            
         .then( (data) => {
-            console.log("data = " + data);
-            // if (data=="-1") {
-            //     console.log("Login error");
-            //     this.message = "Error, please try again";
-            // } else
+            console.log(data);
+            if (typeof(data.error)!="undefined") {
+                console.log("Create user error");
+                if (data.error=="DUPLICATE"){
+                  this.message = "Duplicate user name."
+                } else {
+                  this.message = "Unknown error.  Please try again."
+                }
+            } else
             {
                 console.log("Login success.  New bearer = " + data);
-                // this.$store.commit('setUserJWT', "Bearer " + data);
-                // this.$router.push({
-                //             name: 'ViewArticles',
-                //             params: {
-                //                 }
-                // })
+                this.message = "Login successful!"
+                this.$store.commit('setUserJWT', "Bearer " + data);
+                this.$router.push({
+                            name: 'ViewArticles',
+                            params: {
+                                }
+                })
             }
         })
         .catch( err => console.log("Error retrieving data: " + err));

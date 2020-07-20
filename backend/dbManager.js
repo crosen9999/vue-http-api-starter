@@ -14,6 +14,59 @@ function validateUser(userID, password) {
     });
 }
 
+/*
+addUser
+    UserName
+    Password
+
+Behavior:
+    Adds record to user table
+
+Returns    
+    On success, res is the following object:
+    {"affectedRows":1,"insertId":15,"warningStatus":0}
+
+    On err, rej is a string:
+        DUPLICATE   duplicate entry
+        CONNECTION  connection error
+        OTHER       any other error
+*/
+
+function addUser(UserName, Password) {
+    console.log("AddUser: " + UserName + "/" + Password);
+    dbQueryString = `
+                    INSERT
+                    INTO User (UserName, Password)
+                    VALUES ("${UserName}", "${Password}")
+                    `
+    console.log(dbQueryString);
+    return new Promise( (res, rej) => {
+        pool.getConnection()
+            .then(conn => {
+                console.log("Creating user: " + UserName);
+                conn.query(dbQueryString)
+                    .then((queryResult) => {
+                        console.log("SUCCESS:" + JSON.stringify(queryResult));
+                        res(queryResult);
+                        conn.release();
+                })
+                .catch(err => {
+                    console.log("DB Query Error: " + JSON.stringify(err));
+                    conn.release();
+                    if (err.code=="ER_DUP_ENTRY") {
+                        rej("DUPLICATE");
+                    } else {
+                        rej("UNKNOWN")
+                    }
+                  })
+            }).catch(err => {
+                console.log("DB Connection error");
+                conn.release();
+                rej("CONNECTION");
+            });
+    })
+}
+
 function getAllArticles() {
     return new Promise( (res, rej) => {
         pool.getConnection()
@@ -146,6 +199,7 @@ function addArticle(articleName, articleText) {
 }
 
 module.exports.validateUser = validateUser;
+module.exports.addUser = addUser;
 module.exports.getAllArticles = getAllArticles;
 module.exports.getArticle = getArticle;
 module.exports.updateArticle = updateArticle;

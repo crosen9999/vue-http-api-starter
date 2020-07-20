@@ -36,6 +36,7 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors')        //solves cross-origin issue not solved by setting CORS header normally 
 const { request } = require('http')
 const { response } = require('express')
+const { execFile } = require('child_process')
 
 app = express();
 app.options('*', cors())
@@ -75,26 +76,49 @@ app.get('/debug', function(req, res) {
     .finally(console.log("Back from getArticle()"));
 });
 
-//Create User
+/***************************************************
+Create User
+***************************************************
+Input params as form vars:
+    UserName
+    Password
+
+Behavior:
+    Adds record to user table
+
+Returns:
+    On success, returns JWT
+    On error, returns {error: ERR_MESSAGE}
+    where ERR_MESSAGE is:
+        DUPLICATE   if UserName already exists
+        UNKNOWN     for any other error
+*/
 app.post('/api/createuser', (req, res) => {
     console.log("***********************************************");
-    console.log("Create User: " + req.body.UserName);
+    console.log("Creating user for: " + req.body.UserName + "/" + req.body.Password);
     res.setHeader('Access-Control-Allow-Origin', '*');
-    const user = {userID: '1', userName: 'john'};
-    console.log("Sending signed token for " + user.userName);
 
-    let success = false
-    if (success==true) {
+    UserName = req.body.UserName;
+    Password = req.body.Password;
+
+    db.addUser(UserName, Password)
+    .then(dbres => {
+        console.log("User created with UserID " + dbres.insertId);
+        const user = {userID: dbres.insertId, userName: UserName};
         jwt.sign(user, JWT_SECRET, (err, token) => {
             console.log("token = " + token)
             res.json(token);
             res.end();
-        });
-    } else {
-        console.log()
-        res.json({token: "-1"});
-        res.end();
-    }
+        })
+    })
+    .catch(err => {
+        if (err == "DUPLICATE") {
+            res.json({error: "DUPLICATE"})
+        }else {
+            res.json({error: "UNKNOWN"})
+        }
+    })
+    .finally(console.log("Back from addUser()"));
 })
 
 //Login
@@ -115,8 +139,10 @@ function handleDBGet(dbFunction, iParams, req, res){
     console.log("***********************************************");
     console.log("Start generic handler for dbFunction = " + dbFunction.name);
     res.setHeader('Access-Control-Allow-Origin', '*');
-    jwt.verify(req.token, JWT_SECRET, (err, authData) => {
-        console.log("Verified for user: " + authData.userID);
+    jwt.verify(req.token, JWT_SECRET, (err, decoded) => {
+        console.log(JSON.stringify(decoded))
+        CurrentUserID = decoded.userID;
+        console.log("Verified for user: " + CurrentUserID);
         if(err) {
             console.log("Invalid JWT");
             res.sendStatus(403);

@@ -67,7 +67,6 @@ export default {
           return response.json();
       })
       .then( (data) => {
-
           if (data=="undefined") {
             console.log("Login failed")
             console.log("No data found.");
