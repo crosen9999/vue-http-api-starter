@@ -7,10 +7,10 @@
           {{message}}<br><br>
 
           <label for="uname"><b>Username</b></label>
-          <input type="text" placeholder="Enter Username" name="uname" xrequired>
+          <input v-model="UserName" type="text" placeholder="Enter Username" name="uname" xrequired>
 
           <label for="psw"><b>Password</b></label>
-          <input type="password" placeholder="Enter Password" name="psw" xrequired>
+          <input v-model="Password" type="password" placeholder="Enter Password" name="psw" xrequired>
             
           <button type="submit" @click="login">Login</button>
           <label>
@@ -36,7 +36,9 @@ export default {
   name: 'Login',
   data() {
     return {
-      message: "WELCOME!!! Please login."
+      message: "WELCOME!!! Please login.",
+      UserName: "",
+      Password: ""
     } 
   },
   components: {
@@ -53,6 +55,7 @@ export default {
                   }
               })
     },
+
     login: function(e) {
       e.preventDefault
       console.log("Getting data");
@@ -60,16 +63,23 @@ export default {
 
       fetch(url, {
             method: 'POST',
-            headers: {'Authorization': ""}
+            headers: {
+                'Content-Type': 'application/json'
+                },
+            body: JSON.stringify({
+                        UserName: this.UserName,
+                        Password: this.Password
+                        })
             })
       .then( (response) => {
+          console.log(response)
           console.log("Converting response to json");
           return response.json();
       })
       .then( (data) => {
-          if (data=="undefined") {
+          if (typeof(data.error)!="undefined") {
             console.log("Login failed")
-            console.log("No data found.");
+            this.message = "Please try again."
           } else
           {
             console.log("Login successful.")

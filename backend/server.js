@@ -55,25 +55,70 @@ console.log("Starting API server on port " + API_PORT);
 server.listen(API_PORT);
 console.log("Server started.")
 
+/*
+handleDBGet
+    dbFunction  database function to call
+    iParams     params to pass to db function
+    req         express req object
+    res         express res object
+
+Behavior
+    This is a wrapper function for end points that do simple DB retrievals
+    It handles:
+        setting CORS header
+        authentication
+        calling speficied DB function
+        returning DB results to client on success
+
+*/
+function handleDBGet(dbFunction, iParams, req, res){
+    console.log("***********************************************");
+    console.log("Start generic handler for dbFunction = " + dbFunction.name);
+
+    // enable cross origin access
+    res.setHeader('Access-Control-Allow-Origin', '*');
+
+    // verify the JWT token and then call DB function
+    jwt.verify(req.token, JWT_SECRET, (err, decoded) => {
+        console.log(JSON.stringify(decoded))
+        CurrentUserID = decoded.userID;
+        console.log("Verified for user: " + CurrentUserID);
+        if(err) {
+            console.log("Invalid JWT");
+            res.sendStatus(403);
+      } else {
+            res.writeHead(200, {'ContentType': 'text/html'});
+            dbFunction(... iParams)
+                .then(rows => {
+                    console.log("Processing result");
+                    if (rows.length == 0) {
+                        console.log("No data");
+                        res.end('{"result": "no data"}');
+                    }
+                    else {
+                        console.log("Data found");
+                        console.log(JSON.stringify(rows).substring(0,50));
+                        res.end(JSON.stringify(rows));
+                        //res.json(rows)
+                    }
+                })
+                .catch( err => {
+                    console.log("*** Error from dbFunction: " + err)
+                    res.json({Error: "Could not process request."})
+                })
+                .finally(console.log("Back from DB call"));          
+        }
+    })     
+}
+
 // DEBUG End Point
 app.get('/debug', function(req, res) {
     console.log("***********************************************");
-    console.log("DB Add")
-    //db.updateArticle(req.body.ArticleID, req.body.ArticleName, req.body.ArticleText)
-    db.addArticle("x", "y")
-    .then(dbres => {
-        console.log("DB rows affected: " + dbres.affectedRows);
-        if (dbres.affectedRows == 1) {
-            console.log("DB success: " + JSON.stringify(dbres));
-            res.end(JSON.stringify(dbres))
-        }
-        else {
-            console.log("DB error: wrong number rows affected");
-            res.end(dbres)
-        }
-    })
-    .catch(err => "*** Error from getAccount: " + err)
-    .finally(console.log("Back from getArticle()"));
+    console.log("Debug");
+    // jwt.sign({x: "5"}, JWT_SECRET, (err, token) => {
+    //     console.log(typeof(token))
+    //     res.send(token);
+    // })
 });
 
 /***************************************************
@@ -126,46 +171,27 @@ app.post('/api/login', (req, res) => {
     console.log("***********************************************");
     console.log("Login");
     res.setHeader('Access-Control-Allow-Origin', '*');
-    const user = {userID: '1', userName: 'john'};
-    console.log("Sending signed token for " + user.userName);
-    jwt.sign(user, JWT_SECRET, (err, token) => {
-        res.json(token);
-        res.end();
-    });
+
+    UserName = req.body.UserName;
+    Password = req.body.Password;
+
+    console.log("Username: " + UserName)
+    console.log(`Logging in with ${UserName} / ${Password} `);
+    db.validateUser(UserName, Password)
+    .then(dbres => {
+        console.log("User validation success");
+        jwt.sign(dbres.user, JWT_SECRET, (err, token) => {
+            console.log("token = " + token)
+            res.json(token);
+        })
+    })
+    .catch(err => {
+        console.log("Login error", err)
+        res.json(err);
+    })
+    .finally(console.log("Back from validateUser()"));
 })
 
-// generic get handler
-function handleDBGet(dbFunction, iParams, req, res){
-    console.log("***********************************************");
-    console.log("Start generic handler for dbFunction = " + dbFunction.name);
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    jwt.verify(req.token, JWT_SECRET, (err, decoded) => {
-        console.log(JSON.stringify(decoded))
-        CurrentUserID = decoded.userID;
-        console.log("Verified for user: " + CurrentUserID);
-        if(err) {
-            console.log("Invalid JWT");
-            res.sendStatus(403);
-      } else {
-            res.writeHead(200, {'ContentType': 'text/html'});
-            dbFunction(... iParams)
-                .then(rows => {
-                    console.log("Processing result");
-                    if (rows.length == 0) {
-                        console.log("No data");
-                        res.end('{"result": "no data"}');
-                    }
-                    else {
-                        console.log("Data found");
-                        console.log(JSON.stringify(rows).substring(0,50));
-                        res.end(JSON.stringify(rows));
-                    }
-                })
-                .catch(err => "console.log(*** Error from dbFunction: " + err)  
-                .finally(console.log("Back from DB call"));          
-        }
-    })     
-}
 
 // Articles GET
 app.get('/api/articles', checkForToken, function(req, res) {

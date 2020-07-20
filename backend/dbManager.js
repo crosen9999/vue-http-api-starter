@@ -8,10 +8,38 @@ const pool = mariadb.createPool({
     database: 'dev'
 });
 
-function validateUser(userID, password) {
+function validateUser(UserName, Password) {
+    dbQueryString = `
+                    SELECT *
+                    FROM user
+                    WHERE UserName = "${UserName}"
+                        and Password = "${Password}"
+                    `    
+    console.log("Querying database with: " + dbQueryString)
     return new Promise( (res, rej) => {
-        res({userID: "123", userName: "John"});
-    });
+        pool.getConnection()
+            .then(conn => {              
+                conn.query(dbQueryString)
+                    .then((rows) => {
+                        console.log("Rows returned: " + rows.length);
+                        if (rows.length==1){
+                            res({user: {userID: rows[0].UserID}});    
+                        } else{
+                            rej({error: "-1"});
+                            conn.release();
+                        }
+                })
+                .catch(err => {
+                    console.log("DB Query Error: " + err);
+                    conn.release();
+                    rej({error: "-2"});
+                })
+            }).catch(err => {
+                console.log("DB Connection error");
+                conn.release();
+                rej({error: "-3"});
+            });
+    })
 }
 
 /*
@@ -68,10 +96,14 @@ function addUser(UserName, Password) {
 }
 
 function getAllArticles() {
+    dbQueryString = `
+                    SELECT *
+                    FROM article
+                    `    
     return new Promise( (res, rej) => {
         pool.getConnection()
             .then(conn => {              
-                conn.query("select * from Article")
+                conn.query(dbQueryString)
                     .then((rows) => {
                         console.log("Rows returned: " + rows.length);
                         res(rows);
@@ -91,10 +123,15 @@ function getAllArticles() {
 }
 
 function getArticle(ArticleID) {
+    dbQueryString = `
+                    SELECT *
+                    FROM article
+                    WHERE ArticleID = ${ArticleID}
+                    `    
     return new Promise( (res, rej) => {
         pool.getConnection()
             .then(conn => {              
-                conn.query("select * from Article where ArticleID = " + ArticleID)
+                conn.query(dbQueryString)
                     .then((rows) => {
                         console.log("Rows returned: " + rows.length);
                         res(rows);
@@ -114,13 +151,16 @@ function getArticle(ArticleID) {
 }
 
 function updateArticle(articleID, articleName, articleText) {
+    dbQueryString = `
+                    UPDATE Article
+                    SET ArticleName = "${articleName}",
+                        ArticleText = "${articleText}"
+                    WHERE ArticleID = "${articleID}"`
     return new Promise( (res, rej) => {
         pool.getConnection()
             .then(conn => {
                 console.log("Updated article name: " + articleName);
-                conn.query("update Article set ArticleName = '" 
-                    + articleName + "', ArticleText = '" 
-                    + articleText + "' where ArticleID = " + articleID)
+                conn.query(dbQueryString)
                     .then((rows) => {
                         console.log("Rows returned: " + rows.affectedRows);
                         res(rows);
