@@ -1,4 +1,5 @@
 const mariadb = require('mariadb');
+const hasher = require('bcrypt');
 
 const pool = mariadb.createPool({
     host: 'localhost', 
@@ -9,11 +10,10 @@ const pool = mariadb.createPool({
 });
 
 function validateUser(UserName, Password) {
-    dbQueryString = `
-                    SELECT *
+    const dbQueryString = `
+                    SELECT UserID, Password
                     FROM user
                     WHERE UserName = "${UserName}"
-                        and Password = "${Password}"
                     `    
     console.log("Querying database with: " + dbQueryString)
     return new Promise( (res, rej) => {
@@ -23,7 +23,12 @@ function validateUser(UserName, Password) {
                     .then((rows) => {
                         console.log("Rows returned: " + rows.length);
                         if (rows.length==1){
-                            res({user: {userID: rows[0].UserID}});    
+                            if (hasher.compareSync(Password, rows[0].Password)){
+                                res({user: {userID: rows[0].UserID}});
+                            } else {
+                                rej({error: "-100"});
+                                conn.release();
+                            }
                         } else{
                             rej({error: "-1"});
                             conn.release();
@@ -62,10 +67,11 @@ Returns
 
 function addUser(UserName, Password) {
     console.log("AddUser: " + UserName + "/" + Password);
-    dbQueryString = `
+    const PasswordHash = hasher.hashSync(Password, 10) 
+    const dbQueryString = `
                     INSERT
                     INTO User (UserName, Password)
-                    VALUES ("${UserName}", "${Password}")
+                    VALUES ("${UserName}", "${PasswordHash}")
                     `
     console.log(dbQueryString);
     return new Promise( (res, rej) => {
@@ -153,9 +159,41 @@ function getArticle(ArticleID) {
 function updateArticle(articleID, articleName, articleText) {
     dbQueryString = `
                     UPDATE Article
-                    SET ArticleName = "${articleName}",
-                        ArticleText = "${articleText}"
-                    WHERE ArticleID = "${articleID}"`
+                    SET ArticleName = '${articleName}',
+                        ArticleText = '${articleText}'
+                    WHERE ArticleID = '${articleID}'`
+    return new Promise( (res, rej) => {
+        pool.getConnection()
+            .then(conn => {
+                console.log("Updated article name: " + articleName);
+                conn.query(dbQueryString)
+                    .then((rows) => {
+                        console.log("Rows returned: " + rows.affectedRows);
+                        res(rows);
+                        conn.release();
+                })
+                .catch(err => {
+                    console.log("DB Query Error: " + err);
+                    conn.release();
+                    rej("Query did not execute");
+                })
+            }).catch(err => {
+                console.log("DB Connection error");
+                conn.release();
+                rej("DB Connection error");
+            });
+    })
+}
+
+function addArticle(articleName, articleText) {
+
+
+    dbQueryString = `
+                    INSERT
+                    INTO article (ArticleName, ArticleText)
+                    VALUES ('${articleName}', '${articleText}')
+                    `
+    console.log(dbQueryString);
     return new Promise( (res, rej) => {
         pool.getConnection()
             .then(conn => {
@@ -189,36 +227,6 @@ function deleteArticle(articleID) {
         pool.getConnection()
             .then(conn => {
                 console.log("Deleting article with ID: " + articleID);
-                conn.query(dbQueryString)
-                    .then((rows) => {
-                        console.log("Rows returned: " + rows.affectedRows);
-                        res(rows);
-                        conn.release();
-                })
-                .catch(err => {
-                    console.log("DB Query Error: " + err);
-                    conn.release();
-                    rej("Query did not execute");
-                })
-            }).catch(err => {
-                console.log("DB Connection error");
-                conn.release();
-                rej("DB Connection error");
-            });
-    })
-}
-
-function addArticle(articleName, articleText) {
-    dbQueryString = `
-                    INSERT
-                    INTO article (ArticleName, ArticleText)
-                    VALUES ("${articleName}", "${articleText}")
-                    `
-    console.log(dbQueryString);
-    return new Promise( (res, rej) => {
-        pool.getConnection()
-            .then(conn => {
-                console.log("Updated article name: " + articleName);
                 conn.query(dbQueryString)
                     .then((rows) => {
                         console.log("Rows returned: " + rows.affectedRows);

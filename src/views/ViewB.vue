@@ -1,6 +1,9 @@
 <template>
   <div class="hello" style="text-align: center">
       Hello from ViewB
+      <br>
+
+
   </div>
 </template>
 
@@ -14,7 +17,8 @@ export default {
   },
   data() {
     return {
-      } 
+      token: ""
+    } 
   },
   components: {
     //HelloWorld

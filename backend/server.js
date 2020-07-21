@@ -5,6 +5,9 @@ const STATIC_DIR = "../public" // dev
 //cont STATIC_DIR = "../dist"  // prod
 const JWT_SECRET = "thisisthekey"
 
+//////////////////////////  General Purpose Modules /////////////////////////
+
+
 //////////////////////////  Web Static Assets /////////////////////////
 const fs = require('fs')
 const expressW = require("express");
@@ -115,6 +118,7 @@ function handleDBGet(dbFunction, iParams, req, res){
 app.get('/debug', function(req, res) {
     console.log("***********************************************");
     console.log("Debug");
+    res.end("Hello")
     // jwt.sign({x: "5"}, JWT_SECRET, (err, token) => {
     //     console.log(typeof(token))
     //     res.send(token);
@@ -182,7 +186,7 @@ app.post('/api/login', (req, res) => {
         console.log("User validation success");
         jwt.sign(dbres.user, JWT_SECRET, (err, token) => {
             console.log("token = " + token)
-            res.json(token);
+            res.json({token: token});
         })
     })
     .catch(err => {

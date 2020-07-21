@@ -87,6 +87,7 @@ export default {
                 console.log("Login success.  New bearer = " + data);
                 this.message = "Login successful!"
                 this.$store.commit('setUserJWT', "Bearer " + data);
+                this.$store.commit('setUserName', this.UserName);
                 this.$router.push({
                             name: 'ViewArticles',
                             params: {

@@ -77,14 +77,16 @@ export default {
           return response.json();
       })
       .then( (data) => {
+          console.log("Converted response: ", data);
           if (typeof(data.error)!="undefined") {
             console.log("Login failed")
             this.message = "Please try again."
           } else
           {
             console.log("Login successful.")
-            console.log("Converted response: " + data);
-            this.$store.commit('setUserJWT', "Bearer " + data);
+            console.log("Converted response: " + data.token);
+            this.$store.commit('setUserJWT', "Bearer " + data.token);
+            this.$store.commit('setUserName', this.UserName);
             this.$router.push({
               name: 'ViewArticles',
               params: {
@@ -94,9 +96,7 @@ export default {
           }
       })
       .catch( err => console.log("Error logging in: " + err));
-
     }
-
   }
 }
 </script>

@@ -35,16 +35,16 @@
 </template>
 
 <script>
-    import Articles from "@/components/Articles"
+  import Articles from "@/components/Articles"
 
-    export default {
-      components: {
-          Articles
-      },
-      created() {
-        //alert("ViewB")
-      }
+  export default {
+    components: {
+        Articles
+    },
+    created() {
+      //alert("ViewB")
     }
+  }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

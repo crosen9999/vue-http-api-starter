@@ -52,7 +52,13 @@ const routes = [
           import(/* webpackChunkName: "article" */ "../views/ViewA1.vue")
       }
     ]      
-  },  
+  },
+  {
+    path: "/viewb",
+    name: "ViewB",
+    component: () =>
+      import(/* webpackChunkName: "x" */ "../views/ViewB.vue")
+  }  
 ];
 
 const router = new VueRouter({
