@@ -11,6 +11,8 @@
 
 //import HelloWorld from "@/components/HelloWorld"
 
+
+
 export default {
   name: 'ViewB',
   props: {
@@ -26,6 +28,8 @@ export default {
   computed: {
   },
   methods: {
+  },
+  mounted () {
   }
 }
 </script>

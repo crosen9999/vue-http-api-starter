@@ -1,30 +1,28 @@
 <template>
   <div>
-
     <!-- Navigation -->
-      <TopNav />
+    <TopNav />
 
     <!-- MAIN CONTENT: top level view -->
-      <router-view></router-view>
-
+    <router-view /><br />
   </div>
 </template>
 
 <script>
-import TopNav from "@/components/TopNav.vue"
+import TopNav from "@/components/TopNav.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   methods: {
-    logout: function (e) {
+    logout: function(e) {
       e.preventDefault();
-      this.$store.commit('setUserJWT', "");
+      this.$store.commit("setUserJWT", "");
     },
   },
   components: {
-    TopNav
-  }
-}
+    TopNav,
+  },
+};
 </script>
 
 <style>
