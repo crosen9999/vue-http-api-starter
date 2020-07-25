@@ -60,9 +60,7 @@ export default {
       document.getElementById("id01").style.display = "none";
       this.$router.push({
         name: "ViewArticles",
-        params: {
-          refresh: 0,
-        },
+        params: {},
       });
     },
 

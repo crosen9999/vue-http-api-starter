@@ -1,5 +1,8 @@
 <template>
   <section>
+    <div style="margin:auto; width: 50%; border: 1px solid">
+      <button style="width: 100%" @click="toggleNav">Toggle Nav</button>
+    </div>
     <div id="tags">
       <div class="tag" style="background-color: #c0b2c0;">A</div>
       <div class="tag" style="background-color: #b2c0c0;">B</div>
@@ -43,7 +46,12 @@ export default {
     //HelloWorld
   },
   computed: {},
-  methods: {},
+  methods: {
+    toggleNav: function(e) {
+      e.preventDefault();
+      this.$store.commit("setNoNav", !this.$store.getters.noNav);
+    },
+  },
   mounted() {},
 };
 </script>

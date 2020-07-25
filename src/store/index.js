@@ -8,6 +8,8 @@ export default new Vuex.Store({
     userJWT: "",
     UserName: "",
     update: 0,
+    noNav: false,
+    ArticleID: 0,
   },
   mutations: {
     setUserJWT(state, token) {
@@ -19,6 +21,12 @@ export default new Vuex.Store({
     setUpdate(state, update) {
       state.update = update;
     },
+    setNoNav(state, noNav) {
+      state.noNav = noNav;
+    },
+    setArticleID(state, ArticleID) {
+      state.ArticleID = ArticleID;
+    },
   },
   getters: {
     userJWTToken(state) {
@@ -29,6 +37,12 @@ export default new Vuex.Store({
     },
     update(state) {
       return state.update;
+    },
+    noNav(state) {
+      return state.noNav;
+    },
+    ArticleID(state) {
+      return state.ArticleID;
     },
   },
 });

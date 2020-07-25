@@ -8,9 +8,9 @@
       <!-- Articles List -->
       <div
         class="article-list"
-        style="border: 1px solid #eee; margin: 0 20px 0 10px; width: 300px"
+        style="border: 0px solid #ccc; margin: 0 20px 0 10px; width: 300px"
       >
-        <div style="float: right">
+        <div style="">
           <router-link
             :to="{
               name: 'AddArticle',
@@ -20,7 +20,6 @@
             }"
             >[ADD]</router-link
           >
-          <br />
         </div>
         <div>
           <articles style="width: 250px"></articles>

@@ -143,6 +143,7 @@ function getArticle(ArticleID) {
                     FROM article
                     WHERE ArticleID = ${ArticleID}
                     `;
+  //console.log(dbQueryString);
   return new Promise((res, rej) => {
     pool
       .getConnection()

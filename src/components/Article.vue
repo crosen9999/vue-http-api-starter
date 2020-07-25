@@ -1,41 +1,46 @@
 <template>
-  <div class="hello" style="font-family: helvetica">
+  <div class="hello" style="font-family: helvetica;">
     <!-- EDIT link -->
-    <router-link
-      v-if="!this.edit && this.ArticleID != 0"
-      :to="{
-        name: 'ViewArticle',
-        params: {
-          ArticleID: Article.ArticleID,
-          edit: true,
-        },
-      }"
-      style="float: right"
-      >[EDIT]</router-link
-    >
-    <br />
+    <div v-if="!this.edit && this.ArticleID != 0">
+      <router-link
+        :to="{
+          name: 'ViewArticle',
+          params: {
+            ArticleID: Article.ArticleID,
+            edit: true,
+          },
+        }"
+        style="float: right"
+        >[EDIT]</router-link
+      >
 
-    <!-- Edit mode -->
+      <button
+        @click="deleteArticle(Article.ArticleID)"
+        style="color: green;
+        background-color:white; border: none"
+      >
+        [DEL]
+      </button>
+    </div>
+    <!-- Editable View -->
     <div v-if="this.edit">
-      <form style="margin: 20px; height: 600px">
+      <form style="margin: 20px; height: 600px; display: grid;">
         Article Name:
         <input
-          style="width: 100%;"
+          style="flex: 1;"
           type="text"
           v-model="ArticleUpdate.ArticleName"
-        /><br /><br />
+        /><br />
         <vue-editor
-          style="width: 100%; margin-bottom: 10px; height: 500px; overflow: scroll"
+          style="flex: 1; margin-bottom: 10px; height: 500px; overflow: scroll"
           v-model="ArticleUpdate.ArticleText"
         ></vue-editor>
-        <button style="float: right;" @click="cancelEdit">CANCEL</button>
-        <button style="float: right; margin-right: 10px" @click="updateArticle">
-          SAVE
-        </button>
+        <button style="xfloat: right;" @click="updateArticle">SAVE</button>
+        <button style="xfloat: right;" @click="cancelEdit">CANCEL</button>
       </form>
     </div>
 
-    <!-- Not edit mode -->
+    <!-- Read only view -->
     <div v-else style="margin: 10px">
       <div v-if="this.ArticleID != 0">
         {{ Article.ArticleName }}<br />
@@ -77,6 +82,7 @@ export default {
     },
   },
   mounted() {
+    if (this.ArticleID <= 0) this.ArticleID = this.$store.getters.ArticleID;
     this.getArticle();
   },
   // beforeRouteUpdate: (to, from ,next) =>{
@@ -97,8 +103,7 @@ export default {
 
     getArticle: function() {
       console.log("Getting data for: " + this.ArticleID);
-      const url =
-        "https://localhost:8001/api/article?articleid=" + this.ArticleID;
+      const url = "https://localhost:8001/api/articles/" + this.ArticleID;
       const bearer = this.$store.getters.userJWTToken;
 
       fetch(url, {
@@ -127,7 +132,7 @@ export default {
     updateArticle: function(e) {
       e.preventDefault();
       console.log("Saving data for: " + this.ArticleID);
-      const url = "https://localhost:8001/api/article";
+      const url = "https://localhost:8001/api/articles";
       const bearer = this.$store.getters.userJWTToken;
 
       fetch(url, {
@@ -158,6 +163,51 @@ export default {
               name: "ViewArticle",
               params: {
                 ArticleID: Number(this.Article.ArticleID),
+                edit: Boolean(false),
+              },
+            });
+          }
+        })
+        .catch((err) => console.log("Error retrieving data: " + err));
+    },
+
+    deleteArticle: function(ArticleID) {
+      if (!confirm("Delete article?")) return;
+      console.log("Deleting article with ID " + ArticleID);
+
+      const url = "https://localhost:8001/api/articles";
+      const bearer = this.$store.getters.userJWTToken;
+
+      fetch(url, {
+        method: "DELETE",
+        headers: {
+          Authorization: bearer,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ArticleID: ArticleID,
+        }),
+      })
+        .then((response) => {
+          console.log("Converting data to json");
+          return response.json();
+        })
+        .then((response) => {
+          console.log("Converted response: " + response);
+          if (response != 0) {
+            console.log("DB error: " + response);
+          } else {
+            console.log("DB success");
+            // this.Articles.splice(
+            //   this.Articles.findIndex((A) => (A.ArticleID = ArticleID)) - 1,
+            //   1
+            // );
+            // this.$emit("updatenow");
+            this.$store.commit("setUpdate", 1);
+            this.$router.push({
+              name: "ViewArticle",
+              params: {
+                ArticleID: 0,
                 edit: Boolean(false),
                 refresh: 1,
               },

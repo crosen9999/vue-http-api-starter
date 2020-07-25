@@ -1,7 +1,9 @@
 <template>
   <div>
     <!-- Navigation -->
-    <top-nav></top-nav>
+    <div v-if="!this.$store.getters.noNav">
+      <top-nav></top-nav>
+    </div>
 
     <!-- MAIN CONTENT: top level view -->
     <router-view></router-view><br />

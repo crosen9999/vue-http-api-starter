@@ -203,15 +203,16 @@ app.get("/api/articles", checkForToken, function(req, res) {
 });
 
 //Article GET
-app.get("/api/article", checkForToken, function(req, res) {
+app.get("/api/articles/:articleid", checkForToken, function(req, res) {
   console.log("***********************************************");
   console.log("Getting article");
-  searchTerm = req.query.articleid;
-  handleDBGet(db.getArticle, [searchTerm], req, res);
+  ArticleID = req.params.articleid;
+  console.log("ArticleID = " + ArticleID);
+  handleDBGet(db.getArticle, [ArticleID], req, res);
 });
 
 //Article PUT
-app.put("/api/article", checkForToken, function(req, res) {
+app.put("/api/articles", checkForToken, function(req, res) {
   console.log("***********************************************");
   //console.log("body: " + JSON.stringify(req.body));
   console.log("Saving article for: " + req.body.ArticleID);
@@ -243,7 +244,7 @@ app.put("/api/article", checkForToken, function(req, res) {
 });
 
 //Article DEL
-app.delete("/api/article", checkForToken, function(req, res) {
+app.delete("/api/articles", checkForToken, function(req, res) {
   console.log("***********************************************");
   //console.log("body: " + JSON.stringify(req.body));
   console.log("Deleting article: " + req.body.ArticleID);
@@ -271,7 +272,7 @@ app.delete("/api/article", checkForToken, function(req, res) {
 });
 
 //Article POST
-app.post("/api/article", checkForToken, function(req, res) {
+app.post("/api/articles", checkForToken, function(req, res) {
   console.log("***********************************************");
   //console.log("body: " + JSON.stringify(req.body));
   console.log("Adding article");

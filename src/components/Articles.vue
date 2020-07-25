@@ -3,15 +3,10 @@
     <div
       v-for="Article in Articles"
       :key="Article.ArticleID"
-      style="margin-bottom: 20px"
+      style="border: 1px solid #ddd; height: 60px"
     >
-      <button
-        @click="deleteArticle(Article.ArticleID)"
-        style="color: green; background-color:white; border: none"
-      >
-        [x]
-      </button>
       <router-link
+        style="font-size: 10pt; word-break:break-all;"
         :to="{
           name: 'ViewArticle',
           params: {
@@ -20,8 +15,11 @@
           },
         }"
       >
-        {{ Article.ArticleName }}</router-link
-      >
+        <div style="color: #42b983; font-weight: bold">
+          {{ Article.ArticleName }}
+        </div>
+        <div style="color: #aaa">{{ articleSummary(Article.ArticleText) }}</div>
+      </router-link>
     </div>
   </div>
 </template>
@@ -46,56 +44,18 @@ export default {
   },
   watch: {
     update: function(val) {
-      if (val) {
-        //alert("articles update");
+      //alert("articles update: " + val);
+      if (val == 1) {
         this.getArticles();
       }
     },
   },
   methods: {
-    updateNow: function() {},
-
-    deleteArticle: function(ArticleID) {
-      console.log("Deleting article with ID " + ArticleID);
-
-      const url = "https://localhost:8001/api/article";
-      const bearer = this.$store.getters.userJWTToken;
-
-      fetch(url, {
-        method: "DELETE",
-        headers: {
-          Authorization: bearer,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ArticleID: ArticleID,
-        }),
-      })
-        .then((response) => {
-          console.log("Converting data to json");
-          return response.json();
-        })
-        .then((response) => {
-          console.log("Converted response: " + response);
-          if (response != 0) {
-            console.log("DB error: " + response);
-          } else {
-            console.log("DB success");
-            this.Articles.splice(
-              this.Articles.findIndex((A) => (A.ArticleID = ArticleID)) - 1,
-              1
-            );
-            // this.$emit("updatenow");
-            this.$router.push({
-              name: "ViewArticle",
-              params: {
-                ArticleID: -1,
-              },
-            });
-          }
-        })
-        .catch((err) => console.log("Error retrieving data: " + err));
+    articleSummary: function(text) {
+      return text.replace(/<[^>]+>/g, "").substring(0, 70);
     },
+
+    updateNow: function() {},
 
     getArticles: function() {
       console.log("Articles.getArticles()********************");
@@ -118,6 +78,7 @@ export default {
             console.log("Data is valid,");
             this.Articles = data;
             this.$store.commit("setUpdate", 0);
+            this.$store.commit("setArticleID", this.Articles[0].ArticleID);
           }
         })
         .catch((err) => console.log("Error retrieving data: " + err));
