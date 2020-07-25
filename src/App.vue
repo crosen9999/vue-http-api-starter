@@ -1,10 +1,10 @@
 <template>
   <div>
     <!-- Navigation -->
-    <TopNav />
+    <top-nav></top-nav>
 
     <!-- MAIN CONTENT: top level view -->
-    <router-view /><br />
+    <router-view></router-view><br />
   </div>
 </template>
 

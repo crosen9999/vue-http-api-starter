@@ -1,35 +1,38 @@
 <template>
   <div class="hello">
+    <!-- user logged in -->
     <div v-if="this.$store.getters.userJWTToken != ''">
-      <Article :ArticleID="ArticleID" :edit="edit" />
+      <Article :ArticleID="ArticleID" :edit="edit"></Article>
     </div>
-    <div v-else>      
-      User is not logged in.  Not showing Articles.
+
+    <!-- user not logged in -->
+    <div v-else>
+      User is not logged in. Not showing Articles.
     </div>
   </div>
 </template>
 
 <script>
-    import Article from "@/components/Article"
+import Article from "@/components/Article";
 
-    export default {
-      props: {
-          ArticleID: {
-            type: Number,
-            required: true
-          },
-          edit: {
-            type: Boolean,
-            required: true
-          }
-      },        
-      components: {
-          Article
-      },
-      created() {
-        //alert("ViewB")
-      }
-    }
+export default {
+  props: {
+    ArticleID: {
+      type: Number,
+      required: true,
+    },
+    edit: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  components: {
+    Article,
+  },
+  created() {
+    //alert("ViewB")
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

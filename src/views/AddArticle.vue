@@ -51,6 +51,7 @@ export default {
             console.log("DB error");
           } else {
             console.log("DB success.  New articleid = " + response.insertId);
+            this.$store.commit("setUpdate", 1);
             this.$router.push({
               name: "ViewArticle",
               params: {

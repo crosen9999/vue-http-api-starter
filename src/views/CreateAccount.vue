@@ -2,103 +2,109 @@
   <div class="hello">
     <div id="id01" class="modal">
       <div class="modal-content animate" action="/" method="get">
-
         <div class="container">
-          {{message}}<br><br>
+          {{ message }}<br /><br />
 
           <label for="uname"><b>Username</b></label>
-          <input v-model='UserName' type="text" placeholder="Enter Username" name="uname" required>
+          <input
+            v-model="UserName"
+            type="text"
+            placeholder="Enter Username"
+            name="uname"
+            required
+          />
 
           <label for="psw"><b>Password</b></label>
-          <input v-model="Password" type="password" placeholder="Enter Password" name="psw" required>
-            
+          <input
+            v-model="Password"
+            type="password"
+            placeholder="Enter Password"
+            name="psw"
+            required
+          />
+
           <button type="submit" @click="createAccount">Create Account</button>
         </div>
 
         <div class="container" style="background-color:#f1f1f1">
-          <button type="button" @click="cancelLogin" class="cancelbtn">Cancel</button>
+          <button type="button" @click="cancelLogin" class="cancelbtn">
+            Cancel
+          </button>
         </div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
 //import HelloWorld from "@/components/HelloWorld"
 
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     return {
       message: "WELCOME!!! Please provide a username and password.",
       UserName: "",
-      Password: ""
-    } 
+      Password: "",
+    };
   },
   components: {
     //HelloWorld
   },
-  props: {
-  },
+  props: {},
   methods: {
-    cancelLogin: function(){
-      document.getElementById('id01').style.display='none'; 
+    cancelLogin: function() {
+      document.getElementById("id01").style.display = "none";
       this.$router.push({
-                name: 'ViewArticles',
-                params: {
-                  'refresh': 0
-                  }
-              })
+        name: "ViewArticles",
+        params: {
+          refresh: 0,
+        },
+      });
     },
     createAccount: function(e) {
-        e.preventDefault
-        console.log("creating account");
-        const url = "https://localhost:8001/api/createuser";
+      e.preventDefault;
+      console.log("creating account");
+      const url = "https://localhost:8001/api/createuser";
 
-        fetch(
-            url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-                },
-            body: JSON.stringify({
-                        UserName: this.UserName,
-                        Password: this.Password
-                        })
-            }
-        )
-        .then( (response) => {
-            console.log("Converting data to json");
-            return response.json();
-        })            
-        .then( (data) => {
-            console.log(data);
-            if (typeof(data.error)!="undefined") {
-                console.log("Create user error");
-                if (data.error=="DUPLICATE"){
-                  this.message = "Duplicate user name."
-                } else {
-                  this.message = "Unknown error.  Please try again."
-                }
-            } else
-            {
-                console.log("Login success.  New bearer = " + data);
-                this.message = "Login successful!"
-                this.$store.commit('setUserJWT', "Bearer " + data);
-                this.$store.commit('setUserName', this.UserName);
-                this.$router.push({
-                            name: 'ViewArticles',
-                            params: {
-                                }
-                })
-            }
+      fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          UserName: this.UserName,
+          Password: this.Password,
+        }),
+      })
+        .then((response) => {
+          console.log("Converting data to json");
+          return response.json();
         })
-        .catch( err => console.log("Error retrieving data: " + err));
-    }
-  }
-}
+        .then((data) => {
+          console.log(data);
+          if (typeof data.error != "undefined") {
+            console.log("Create user error");
+            if (data.error == "DUPLICATE") {
+              this.message = "Duplicate user name.";
+            } else {
+              this.message = "Unknown error.  Please try again.";
+            }
+          } else {
+            console.log("Login success.  New bearer = " + data);
+            this.message = "Login successful!";
+            this.$store.commit("setUserJWT", "Bearer " + data);
+            this.$store.commit("setUserName", this.UserName);
+            this.$router.push({
+              name: "ViewArticle",
+              params: { ArticleID: 0, edit: false },
+            });
+          }
+        })
+        .catch((err) => console.log("Error retrieving data: " + err));
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -118,11 +124,14 @@ a {
   color: #42b983;
 }
 
-
-body {font-family: Arial, Helvetica, sans-serif; text-align: left;}
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+}
 
 /* Full-width input fields */
-input[type=text], input[type=password] {
+input[type="text"],
+input[type="password"] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -172,8 +181,8 @@ span.psw {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
   padding-top: 60px;
 }
 
@@ -204,27 +213,35 @@ span.psw {
 /* Add Zoom Animation */
 .animate {
   -webkit-animation: animatezoom 0.6s;
-  animation: animatezoom 0.6s
+  animation: animatezoom 0.6s;
 }
 
 @-webkit-keyframes animatezoom {
-  from {-webkit-transform: scale(0)} 
-  to {-webkit-transform: scale(1)}
+  from {
+    -webkit-transform: scale(0);
+  }
+  to {
+    -webkit-transform: scale(1);
+  }
 }
-  
+
 @keyframes animatezoom {
-  from {transform: scale(0)} 
-  to {transform: scale(1)}
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 /* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
   span.psw {
-     display: block;
-     float: none;
+    display: block;
+    float: none;
   }
   .cancelbtn {
-     width: 100%;
+    width: 100%;
   }
 }
 </style>

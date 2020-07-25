@@ -1,59 +1,73 @@
 <template>
-
-    <!-- Navigation -->
-    <header style="margin: 0 0 10px 0; font-size: 11pt;">
-
-      <!-- Top Header Bar -->
-      <div style="display: flex; width: 100%; height: 30px; margin: 0 0 20px 0; background-color: #ccc">
-        <div style="padding: 5px 0 0 20px; font-size: 18pt; margin-left: 10px">Article Database</div>
-        <div style="margin-left: auto; padding: 10px 10px 0px 0px">
-          <div v-if="this.$store.getters.userJWTToken == ''">
-            <router-link :to="{name: 'Login'}">
-              Login
-            </router-link>
-            <span style="color: black">or</span>
-            <router-link :to="{name: 'CreateAccount'}">
-              Create an Account
-            </router-link>
-          </div>
-          <div v-else>
-            Hello, {{this.$store.getters.UserName}} | 
-            <a href="/" @click="logout">logout</a>
-          </div>
-        </div>
+  <!-- Navigation -->
+  <header style="margin: 0 0 10px 0; font-size: 11pt;">
+    <!-- Top Header Bar -->
+    <div
+      style="display: flex; width: 100%; height: 30px; margin: 0 0 20px 0; background-color: #fff"
+    >
+      <!-- LOGO -->
+      <div
+        style="padding: 5px 0 0 20px; font-size: 18pt; margin-left: 10px; color: #ccc"
+      >
+        <router-link to="/articles" style="color: #ccc">
+          Article Database</router-link
+        >
       </div>
 
-      <!-- Menu Links  -->
-      <div style="display: flex; justify-content: center; height: 50px; font-family: helvetica; margin: 0 0 50px 0; text-align: center">
-        <router-link :to="{name: 'ViewArticles', params: {refresh: 0}}" style="margin-right: 30px">
-          View Articles
-        </router-link>
-        <router-link :to="{name: 'ViewA'}" style="margin-right: 30px"> 
-          View A
-        </router-link>
-        <router-link :to="{name: 'ViewB'}" style="margin-right: 30px"> 
-          View B
-        </router-link>
-      </div>        
+      <!-- login / logout / greeting -->
+      <div style="margin-left: auto; padding: 10px 10px 0px 0px; color: #ccc">
+        <div v-if="this.$store.getters.userJWTToken == ''">
+          <router-link :to="{ name: 'Login' }">
+            Login
+          </router-link>
+          <span style="color: black">or</span>
+          <router-link :to="{ name: 'CreateAccount' }">
+            Create an Account
+          </router-link>
+        </div>
+        <div v-else>
+          Hello, {{ this.$store.getters.UserName }} |
+          <a href="/" @click="logout">logout</a>
+        </div>
+      </div>
+    </div>
 
-    </header>
-
+    <!-- Menu Links  -->
+    <div
+      v-if="$route.path != '/viewb'"
+      style="display: flex; justify-content: center; height: 20px; padding-top:
+      5px; font-family: helvetica; margin: 0 0 50px 0; text-align: center;"
+    >
+      <router-link
+        :to="{
+          name: 'ViewArticle',
+          params: { ArticleID: 0, edit: false },
+        }"
+        style="margin-right: 30px"
+      >
+        View Articles
+      </router-link>
+      <router-link :to="{ name: 'ViewA' }" style="margin-right: 30px">
+        View A
+      </router-link>
+      <router-link :to="{ name: 'ViewB' }" style="margin-right: 30px">
+        View B
+      </router-link>
+    </div>
+  </header>
 </template>
 
 <script>
-
 export default {
-  name: 'TopNav',
+  name: "TopNav",
   methods: {
-    logout: function (e) {
+    logout: function(e) {
       e.preventDefault();
-      this.$store.commit('setUserJWT', "");
+      this.$store.commit("setUserJWT", "");
     },
   },
-  components: {
-
-  }
-}
+  components: {},
+};
 </script>
 
 <style>
@@ -67,6 +81,7 @@ export default {
 }
 
 a {
-  text-decoration: none
+  text-decoration: none;
+  color: #50a050;
 }
 </style>

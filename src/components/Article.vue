@@ -1,6 +1,8 @@
 <template>
   <div class="hello" style="font-family: helvetica">
+    <!-- EDIT link -->
     <router-link
+      v-if="!this.edit && this.ArticleID != 0"
       :to="{
         name: 'ViewArticle',
         params: {
@@ -9,11 +11,11 @@
         },
       }"
       style="float: right"
-      v-if="!this.edit"
       >[EDIT]</router-link
     >
     <br />
 
+    <!-- Edit mode -->
     <div v-if="this.edit">
       <form style="margin: 20px; height: 600px">
         Article Name:
@@ -33,13 +35,19 @@
       </form>
     </div>
 
+    <!-- Not edit mode -->
     <div v-else style="margin: 10px">
-      {{ Article.ArticleName }}<br />
-      <hr style="border: 1px solid #ddd" />
-      <div
-        style="height: 500px; overflow: scroll"
-        v-html="ArticleUpdate.ArticleText"
-      ></div>
+      <div v-if="this.ArticleID != 0">
+        {{ Article.ArticleName }}<br />
+        <hr style="border: 1px solid #ddd" />
+        <div
+          style="height: 500px; overflow: scroll"
+          v-html="ArticleUpdate.ArticleText"
+        ></div>
+      </div>
+      <div v-else>
+        Please select an article to the left
+      </div>
     </div>
   </div>
 </template>
@@ -48,7 +56,7 @@
 import { VueEditor } from "vue2-editor";
 
 export default {
-  name: "Article",
+  name: "ArticleX",
   data() {
     return {
       Article: {},

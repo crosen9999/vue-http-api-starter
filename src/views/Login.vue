@@ -2,103 +2,110 @@
   <div class="hello">
     <div id="id01" class="modal">
       <div class="modal-content animate" action="/" method="get">
-
         <div class="container">
-          {{message}}<br><br>
+          {{ message }}<br /><br />
 
           <label for="uname"><b>Username</b></label>
-          <input v-model="UserName" type="text" placeholder="Enter Username" name="uname" xrequired>
+          <input
+            v-model="UserName"
+            type="text"
+            placeholder="Enter Username"
+            name="uname"
+            xrequired
+          />
 
           <label for="psw"><b>Password</b></label>
-          <input v-model="Password" type="password" placeholder="Enter Password" name="psw" xrequired>
-            
+          <input
+            v-model="Password"
+            type="password"
+            placeholder="Enter Password"
+            name="psw"
+            xrequired
+          />
+
           <button type="submit" @click="login">Login</button>
           <label>
-            <input type="checkbox" checked="checked" name="remember"> Remember me
+            <input type="checkbox" checked="checked" name="remember" /> Remember
+            me
           </label>
         </div>
 
         <div class="container" style="background-color:#f1f1f1">
-          <button type="button" @click="cancelLogin" class="cancelbtn">Cancel</button>
+          <button type="button" @click="cancelLogin" class="cancelbtn">
+            Cancel
+          </button>
           <span class="psw">Forgot <a href="#">password?</a></span>
         </div>
-
       </div>
     </div>
   </div>
 </template>
 
 <script>
-
 //import HelloWorld from "@/components/HelloWorld"
 
 export default {
-  name: 'Login',
+  name: "Login",
   data() {
     return {
       message: "WELCOME!!! Please login.",
       UserName: "",
-      Password: ""
-    } 
+      Password: "",
+    };
   },
-  components: {
-  },
-  props: {
-  },
+  components: {},
+  props: {},
   methods: {
-    cancelLogin: function(){
-      document.getElementById('id01').style.display='none'; 
+    cancelLogin: function() {
+      document.getElementById("id01").style.display = "none";
       this.$router.push({
-                name: 'ViewArticles',
-                params: {
-                  'refresh': 0
-                  }
-              })
+        name: "ViewArticles",
+        params: {
+          refresh: 0,
+        },
+      });
     },
 
     login: function(e) {
-      e.preventDefault
+      e.preventDefault;
       console.log("Getting data");
       const url = "https://localhost:8001/api/login";
 
       fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-                },
-            body: JSON.stringify({
-                        UserName: this.UserName,
-                        Password: this.Password
-                        })
-            })
-      .then( (response) => {
-          console.log(response)
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          UserName: this.UserName,
+          Password: this.Password,
+        }),
+      })
+        .then((response) => {
+          console.log(response);
           console.log("Converting response to json");
           return response.json();
-      })
-      .then( (data) => {
+        })
+        .then((data) => {
           console.log("Converted response: ", data);
-          if (typeof(data.error)!="undefined") {
-            console.log("Login failed")
-            this.message = "Please try again."
-          } else
-          {
-            console.log("Login successful.")
+          if (typeof data.error != "undefined") {
+            console.log("Login failed");
+            this.message = "Please try again.";
+          } else {
+            console.log("Login successful.");
             console.log("Converted response: " + data.token);
-            this.$store.commit('setUserJWT', "Bearer " + data.token);
-            this.$store.commit('setUserName', this.UserName);
+            this.$store.commit("setUserJWT", "Bearer " + data.token);
+            this.$store.commit("setUserName", this.UserName);
             this.$router.push({
-              name: 'ViewArticles',
-              params: {
-                'refresh': 0
-                }
-            })
+              name: "ViewArticle",
+              params: { ArticleID: 0, edit: false },
+            });
           }
-      })
-      .catch( err => console.log("Error logging in: " + err));
-    }
-  }
-}
+        })
+        .catch((err) => console.log("Error logging in: " + err));
+    },
+  },
+};
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
@@ -118,11 +125,14 @@ a {
   color: #42b983;
 }
 
-
-body {font-family: Arial, Helvetica, sans-serif; text-align: left;}
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  text-align: left;
+}
 
 /* Full-width input fields */
-input[type=text], input[type=password] {
+input[type="text"],
+input[type="password"] {
   width: 100%;
   padding: 12px 20px;
   margin: 8px 0;
@@ -172,8 +182,8 @@ span.psw {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
   overflow: auto; /* Enable scroll if needed */
-  background-color: rgb(0,0,0); /* Fallback color */
-  background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
   padding-top: 60px;
 }
 
@@ -204,27 +214,35 @@ span.psw {
 /* Add Zoom Animation */
 .animate {
   -webkit-animation: animatezoom 0.6s;
-  animation: animatezoom 0.6s
+  animation: animatezoom 0.6s;
 }
 
 @-webkit-keyframes animatezoom {
-  from {-webkit-transform: scale(0)} 
-  to {-webkit-transform: scale(1)}
+  from {
+    -webkit-transform: scale(0);
+  }
+  to {
+    -webkit-transform: scale(1);
+  }
 }
-  
+
 @keyframes animatezoom {
-  from {transform: scale(0)} 
-  to {transform: scale(1)}
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }
 
 /* Change styles for span and cancel button on extra small screens */
 @media screen and (max-width: 300px) {
   span.psw {
-     display: block;
-     float: none;
+    display: block;
+    float: none;
   }
   .cancelbtn {
-     width: 100%;
+    width: 100%;
   }
 }
 </style>

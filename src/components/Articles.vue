@@ -1,11 +1,15 @@
 <template>
   <div class="article-container" style="width: 500px; height 700px;">
-    <div v-for="Article in Articles" :key="Article.ArticleID">
+    <div
+      v-for="Article in Articles"
+      :key="Article.ArticleID"
+      style="margin-bottom: 20px"
+    >
       <button
         @click="deleteArticle(Article.ArticleID)"
         style="color: green; background-color:white; border: none"
       >
-        [DEL]
+        [x]
       </button>
       <router-link
         :to="{
@@ -82,12 +86,12 @@ export default {
               1
             );
             // this.$emit("updatenow");
-            // this.$router.push({
-            //               name: 'ViewArticles',
-            //               params: {
-            //                 'ArticleID':1
-            //                 }
-            // })
+            this.$router.push({
+              name: "ViewArticle",
+              params: {
+                ArticleID: -1,
+              },
+            });
           }
         })
         .catch((err) => console.log("Error retrieving data: " + err));
