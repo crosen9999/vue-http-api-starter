@@ -9,7 +9,22 @@
 </template>
 
 <script>
-export default {};
+export default {
+  data() {
+    return {
+      myArray: [
+        { id: 1, value: "a" },
+        { id: 2, value: "b" },
+      ],
+    };
+  },
+  computed: {
+    computedElement: function() {
+      return "hello";
+    },
+  },
+  components: {},
+};
 </script>
 
 <style scoped>

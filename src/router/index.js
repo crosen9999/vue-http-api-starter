@@ -38,6 +38,13 @@ const routes = [
     ],
   },
   {
+    path: "/viewarticlezoom/:ArticleID",
+    name: "ViewArticleZoom",
+    props: true,
+    component: () =>
+      import(/* webpackChunkName: "x" */ "../views/ViewArticleZoom.vue"),
+  },
+  {
     path: "/viewa",
     name: "ViewA",
     component: () => import(/* webpackChunkName: "x" */ "../views/ViewA.vue"),

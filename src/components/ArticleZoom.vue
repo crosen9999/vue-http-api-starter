@@ -1,72 +1,32 @@
 <template>
-  <div class="hello" style="font-family: helvetica;">
-    <!-- EDIT link -->
-    <div v-if="!this.edit">
-      <router-link
-        :to="{
-          name: 'ViewArticle',
-          params: {
-            ArticleID: Article.ArticleID,
-            edit: true,
-          },
-        }"
-        style="float: right"
-        >[EDIT]</router-link
-      >
+  <div class="hello" style="font-family: helvetica; height: 100%">
+    <router-link
+      :to="{
+        name: 'ViewArticle',
+        params: {
+          ArticleID: Article.ArticleID,
+          edit: true,
+        },
+      }"
+      style="float: right"
+      >[!]</router-link
+    >
 
-      <button
-        @click="deleteArticle(Article.ArticleID)"
-        style="color: green;
-        background-color:white; border: none"
-      >
-        [DEL]
-      </button>
-    </div>
     <!-- Editable View -->
-    <div v-if="this.edit">
-      <router-link
-        :to="{
-          name: 'ViewArticleZoom',
-          params: {
-            ArticleID: Article.ArticleID,
-          },
-        }"
-        style="float: right"
-        >[^]</router-link
-      >
-      <form style="margin: 20px; height: 600px; display: grid;">
-        Article Name:
-        <input
-          style="flex: 1;"
-          type="text"
-          v-model="ArticleUpdate.ArticleName"
-        /><br />
-        <vue-editor
-          style="flex: 1; margin-bottom: 10px; height: 500px; overflow: scroll"
-          v-model="ArticleUpdate.ArticleText"
-        ></vue-editor>
-        <button style="xfloat: right;" @click="updateArticle">SAVE</button>
-        <button style="xfloat: right;" @click="cancelEdit">CANCEL</button>
-      </form>
-    </div>
-
-    <!-- Read only view -->
-    <div v-else style="margin: 10px">
-      <div v-if="this.CurrentArticleID != 0">
-        <h1>
-          <b>{{ Article.ArticleName }}</b>
-        </h1>
-        <br />
-        <hr style="border: 1px solid #ddd" />
-        <div
-          style="height: 500px; overflow: scroll"
-          v-html="ArticleUpdate.ArticleText"
-        ></div>
-      </div>
-      <div v-else>
-        Please select an article to the left
-      </div>
-    </div>
+    <form style="margin: 20px; height: 800px; display: grid;">
+      Article Name:
+      <input
+        style="flex: 1;"
+        type="text"
+        v-model="ArticleUpdate.ArticleName"
+      /><br />
+      <vue-editor
+        style="flex: 1; margin-bottom: 10px; height: 700px; overflow: scroll"
+        v-model="ArticleUpdate.ArticleText"
+      ></vue-editor>
+      <button style="xfloat: right;" @click="updateArticle">SAVE</button>
+      <button style="xfloat: right;" @click="cancelEdit">CANCEL</button>
+    </form>
   </div>
 </template>
 
@@ -74,7 +34,7 @@
 import { VueEditor } from "vue2-editor";
 
 export default {
-  name: "Article",
+  name: "ArticleZoom",
   data() {
     return {
       Article: {},
@@ -90,13 +50,8 @@ export default {
       type: Number,
       required: true,
     },
-    edit: {
-      type: Boolean,
-      required: true,
-    },
   },
   mounted() {
-    this.$store.commit("setNoNav", false);
     this.CurrentArticleID =
       this.ArticleID <= 0 ? this.$store.getters.ArticleID : this.ArticleID;
     this.getArticle();
@@ -239,17 +194,25 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+html,
+body {
+  height: 100%;
+}
+
 h3 {
   margin: 40px 0 0;
 }
+
 ul {
   list-style-type: none;
   padding: 0;
 }
+
 li {
   display: inline-block;
   margin: 0 10px;
 }
+
 a {
   color: #42b983;
 }

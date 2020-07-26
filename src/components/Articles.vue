@@ -38,7 +38,7 @@ export default {
     this.getArticles();
   },
   computed: {
-    update() {
+    update: function() {
       return this.$store.getters.update;
     },
   },
