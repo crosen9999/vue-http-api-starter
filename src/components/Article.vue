@@ -11,16 +11,13 @@
           },
         }"
         style="float: right"
-        >[EDIT]</router-link
-      >
+      >[EDIT]</router-link>
 
       <button
         @click="deleteArticle(Article.ArticleID)"
         style="color: green;
         background-color:white; border: none"
-      >
-        [DEL]
-      </button>
+      >[DEL]</button>
     </div>
     <!-- Editable View -->
     <div v-if="this.edit">
@@ -32,15 +29,11 @@
           },
         }"
         style="float: right"
-        >[^]</router-link
-      >
+      >[^]</router-link>
       <form style="margin: 20px; height: 600px; display: grid;">
         Article Name:
-        <input
-          style="flex: 1;"
-          type="text"
-          v-model="ArticleUpdate.ArticleName"
-        /><br />
+        <input style="flex: 1;" type="text" v-model="ArticleUpdate.ArticleName" />
+        <br />
         <vue-editor
           style="flex: 1; margin-bottom: 10px; height: 500px; overflow: scroll"
           v-model="ArticleUpdate.ArticleText"
@@ -58,14 +51,9 @@
         </h1>
         <br />
         <hr style="border: 1px solid #ddd" />
-        <div
-          style="height: 500px; overflow: scroll"
-          v-html="ArticleUpdate.ArticleText"
-        ></div>
+        <div style="height: 500px; overflow: scroll" v-html="ArticleUpdate.ArticleText"></div>
       </div>
-      <div v-else>
-        Please select an article to the left
-      </div>
+      <div v-else>Please select an article to the left</div>
     </div>
   </div>
 </template>
@@ -107,7 +95,7 @@ export default {
   //   next();
   // },
   methods: {
-    cancelEdit: function() {
+    cancelEdit: function () {
       this.$router.push({
         name: "ViewArticle",
         params: {
@@ -117,7 +105,7 @@ export default {
       });
     },
 
-    getArticle: function() {
+    getArticle: function () {
       console.log("Getting data for: " + this.CurrentArticleID);
       const url =
         "https://localhost:8001/api/articles/" + this.CurrentArticleID;
@@ -146,11 +134,12 @@ export default {
         .catch((err) => console.log("Error retrieving data: " + err));
     },
 
-    updateArticle: function(e) {
+    updateArticle: function (e) {
       e.preventDefault();
       console.log("Saving data for: " + this.ArticleID);
       const url = "https://localhost:8001/api/articles";
       const bearer = this.$store.getters.userJWTToken;
+      //alert(this.ArticleUpdate.ArticleText.length);
 
       fetch(url, {
         method: "PUT",
@@ -188,7 +177,7 @@ export default {
         .catch((err) => console.log("Error retrieving data: " + err));
     },
 
-    deleteArticle: function(ArticleID) {
+    deleteArticle: function (ArticleID) {
       if (!confirm("Delete article?")) return;
       console.log("Deleting article with ID " + ArticleID);
 

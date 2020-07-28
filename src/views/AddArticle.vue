@@ -2,14 +2,15 @@
   <div class="hello">
     <form style="display: grid;">
       Article Name:
-      <input style="flex: 1" type="text" v-model="ArticleName" /><br />
+      <input style="flex: 1" type="text" v-model="ArticleName" />
+      <br />
       <vue-editor
         style="width: 100%; margin-bottom: 10px; height: 500px; overflow: scroll"
         v-model="ArticleText"
       ></vue-editor>
       <div style="flex: 1; margin-left: auto">
         <button @click="addArticle">ADD</button>
-        <button click="">CANCEL</button>
+        <button click>CANCEL</button>
       </div>
     </form>
   </div>
@@ -29,7 +30,7 @@ export default {
   components: { VueEditor },
   methods: {
     //{"affectedRows":1,"insertId":10,"warningStatus":0}
-    addArticle: function(e) {
+    addArticle: function (e) {
       console.log("Adding new article");
       e.preventDefault();
       const url = "https://localhost:8001/api/articles";

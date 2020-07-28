@@ -38,11 +38,12 @@ const cors = require("cors"); //solves cross-origin issue not solved by setting 
 const { request } = require("http");
 const { response } = require("express");
 const { execFile } = require("child_process");
+const bodyParser = require("body-parser");
 
 app = express();
 app.options("*", cors());
-app.use(express.json()); // for parsing application/json
-app.use(express.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(express.json({ limit: 2000000 }));
+app.use(express.urlencoded({ limit: 2000000, extended: false }));
 
 const server = https.createServer(
   {

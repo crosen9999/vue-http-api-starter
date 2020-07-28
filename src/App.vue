@@ -6,7 +6,8 @@
     </div>
 
     <!-- MAIN CONTENT: top level view -->
-    <router-view></router-view><br />
+    <router-view></router-view>
+    <br />
   </div>
 </template>
 
@@ -16,7 +17,7 @@ import TopNav from "@/components/TopNav.vue";
 export default {
   name: "App",
   methods: {
-    logout: function(e) {
+    logout: function (e) {
       e.preventDefault();
       this.$store.commit("setUserJWT", "");
     },

@@ -1,10 +1,6 @@
 <template>
   <div>
-    <div class="container">
-      <div class="element one">Element 1</div>
-      <div class="element two">Element 2</div>
-      <div class="element three">Element 3</div>
-    </div>
+    <button @click="selectTag({ id: 1 }, { id: 10, title: 'hello' })">now</button>
   </div>
 </template>
 
@@ -12,17 +8,11 @@
 export default {
   data() {
     return {
-      myArray: [
-        { id: 1, value: "a" },
-        { id: 2, value: "b" },
-      ],
+      selectedProducts: [{ id: 1 }, { id: 2 }],
     };
   },
-  computed: {
-    computedElement: function() {
-      return "hello";
-    },
-  },
+  params: { product: { type: String, required: true } },
+  methods: {},
   components: {},
 };
 </script>

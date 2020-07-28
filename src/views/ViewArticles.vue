@@ -1,16 +1,13 @@
 <template>
   <section class="hello">
     <!-- Articles -->
-    <div
-      v-if="this.$store.getters.userJWTToken != ''"
-      style="display: flex; text-align: left"
-    >
+    <div v-if="this.$store.getters.userJWTToken != ''" style="display: flex; text-align: left">
       <!-- Articles List -->
       <div
         class="article-list"
-        style="border: 0px solid #ccc; margin: 0 20px 0 10px; width: 300px"
+        style="border: 0px solid #ccc; margin: 0 20px 0 10px; width: 300px; xheight: 600px; xoverflow-y: scroll"
       >
-        <div style="">
+        <div style>
           <router-link
             :to="{
               name: 'AddArticle',
@@ -18,8 +15,7 @@
                 edit: true,
               },
             }"
-            >[ADD]</router-link
-          >
+          >[ADD]</router-link>
         </div>
         <div>
           <articles style="width: 250px"></articles>
@@ -34,9 +30,7 @@
         <router-view :key="$route.fullPath"></router-view>
       </div>
     </div>
-    <div v-else style="text-align: center">
-      Please log in to view articles.
-    </div>
+    <div v-else style="text-align: center">Please log in to view articles.</div>
   </section>
 </template>
 

@@ -1,7 +1,6 @@
 <template>
   <div class="hello" style="text-align: center">
-    Hello from ViewA
-    <br /><br />
+    <div @click="newText('Volume')">Click Here</div>
     <router-link :to="{ name: 'ViewA1' }" style="margin-right: 30px">
       Go to View A1
       <br />
@@ -12,20 +11,33 @@
 
 <script>
 //import HelloWorld from "@/components/HelloWorld"
+import { mapState } from "vuex";
 
 export default {
   name: "ViewA",
   data() {
     return {
-      content: "",
+      content: "hello",
+      text: "abc",
     };
   },
+  computed: mapState(["UserName"]),
   components: {
     //HelloWorld
   },
   props: {},
   mounted() {},
-  methods: {},
+  methods: {
+    go: function(argT) {
+      alert(argT);
+      console.log("text", argT);
+    },
+    newText: function(argT) {
+      const text = argT;
+      this.text = text;
+      console.log("text", argT);
+    },
+  },
 };
 </script>
 

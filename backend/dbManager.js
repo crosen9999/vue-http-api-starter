@@ -1,5 +1,6 @@
 const mariadb = require("mariadb");
 const hasher = require("bcrypt");
+const fs = require("fs");
 
 const pool = mariadb.createPool({
   host: "localhost",
@@ -170,6 +171,8 @@ function getArticle(ArticleID) {
 }
 
 function updateArticle(articleID, articleName, articleText) {
+  articleName = articleName.replace(/'/g, "\\'");
+  articleText = articleText.replace(/'/g, "\\'");
   dbQueryString = `
                     UPDATE Article
                     SET ArticleName = '${articleName}',
@@ -188,7 +191,8 @@ function updateArticle(articleID, articleName, articleText) {
             conn.release();
           })
           .catch((err) => {
-            console.log("DB Query Error: " + err);
+            console.log("DB Query Error.  See error.txt");
+            fs.writeFile("error.txt", err, (ferr) => console.log(ferr));
             conn.release();
             rej("Query did not execute");
           });
@@ -202,6 +206,8 @@ function updateArticle(articleID, articleName, articleText) {
 }
 
 function addArticle(articleName, articleText) {
+  articleName = articleName.replace(/'/g, "\\'");
+  articleText = articleText.replace(/'/g, "\\'");
   dbQueryString = `
                     INSERT
                     INTO article (ArticleName, ArticleText)
